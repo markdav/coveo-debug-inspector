@@ -1,0 +1,997 @@
+{
+  "totalCount": 14154,
+  "totalCountFiltered": 14154,
+  "duration": 646,
+  "indexDuration": 473,
+  "requestDuration": 502,
+  "searchUid": "57826914-dba7-47b7-b2e6-e521619ce7fd",
+  "pipeline": "support-search-pipeline",
+  "apiVersion": 1,
+  "queryCorrection": {
+    "corrections": []
+  },
+  "warnings": [
+    "No value found for 'context.segment'",
+    "No value found for 'context.segment'",
+    "The numerical facet for field 'publisheddate' returned no values. Numerical facets require ranges to be configured. Enable automatic range generation or provide manual ranges.",
+    "The 'filterFacetCount:true' parameter was ignored. The filterField '@topicurl' must be a facet field with the 'Use cache for nested queries' option enabled."
+  ],
+  "basicExpression": "PartialMatch(keywords=KeywordExpressionPartialMatchAtom(replace) KeywordExpressionPartialMatchAtom(power) KeywordExpressionPartialMatchAtom(supply) KeywordExpressionPartialMatchAtom(Acme) KeywordExpressionPartialMatchAtom(RX200) KeywordExpressionPartialMatchAtom(Series?); match=75%; pick=Unspecified(); stopWords=; noRanking=false; noHighlight=false)",
+  "advancedExpression": "(@source==support-urls OR (@source==community-forums (@category==(\"Servers\",Storage,Networking,Services,Software) OR (NOT @category))) OR @source==release-notes OR @source==tech-docs) (@publisheddate<=now OR NOT @source==software-downloads) ((@filetype==forumpost (@category==(\"Servers\",Storage,Networking,Services,Software) OR (NOT @category))) OR NOT @source==community-forums) (NOT @caseresolutioncode==(Void,\"Quick cases\") (@source<>community-forums OR (@source==community-forums ((NOT @category) OR @category==(\"Servers\",Storage,Networking,Services,Software))))) (NOT @endofsupportdate OR @endofsupportdate>=2026/08/07)",
+  "largeExpression": null,
+  "constantExpression": "(@source==(kb-articles,product-pages,software-downloads,videos,community-forums,unmanaged-documents,release-notes,tech-docs) OR (@source=crm-case (@casestatus==(\"'New'\",\"'Unassigned'\",\"'Pending'\",\"'Active'\",\"'Working'\") OR @caseclosedate>=today-2y))) NOT @title==\"Did you find what you are looking for?\" (@contenttype==(Products,\"Drivers and Software\") OR (@contenttype==Documents @languagecode==(en)) OR (@contenttype==Videos @languagecode==(en)) OR @source==crm-case)",
+  "disjunctionExpression": "((@source==support-urls OR (@source==community-forums (@category==(\"Servers\",Storage,Networking,Services,Software) OR (NOT @category))) OR @source==release-notes OR @source==tech-docs) (@publisheddate<=now OR NOT @source==software-downloads) ((@filetype==forumpost (@category==(\"Servers\",Storage,Networking,Services,Software) OR (NOT @category))) OR NOT @source==community-forums) (NOT @caseresolutioncode==(Void,\"Quick cases\") (@source<>community-forums OR (@source==community-forums ((NOT @category) OR @category==(\"Servers\",Storage,Networking,Services,Software))))) (NOT @endofsupportdate OR @endofsupportdate>=2026/08/07)) (@permanentid=b41f8c2d5e6a47f9a0c3d8e1b2f4a6c8d9e0f1a2b3c4d5e6f708192a3b4c OR @permanentid=873a9446957e979b6a99ea211c499c3b0435bbd6f21b8c788f173ae7c348 OR @permanentid=5d7e9f0a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f6071829304)",
+  "mandatoryExpression": null,
+  "userIdentities": [
+    {
+      "name": "search-service@example.com",
+      "provider": "Email Security Provider",
+      "type": "User"
+    }
+  ],
+  "rankingExpressions": [
+    {
+      "expression": "@docid==\"replace power supply Acme RX200 Series?\"",
+      "modifier": 345,
+      "isConstant": true,
+      "applyToEveryResult": true
+    },
+    {
+      "expression": "@source==community-forums",
+      "modifier": -45,
+      "isConstant": true,
+      "applyToEveryResult": true
+    },
+    {
+      "expression": "@fulltitle=\"replace power supply Acme RX200 Series?\"",
+      "modifier": 25,
+      "isConstant": true,
+      "applyToEveryResult": true
+    },
+    {
+      "expression": "@permanentid=b41f8c2d5e6a47f9a0c3d8e1b2f4a6c8d9e0f1a2b3c4d5e6f708192a3b4c",
+      "modifier": 250,
+      "isConstant": false,
+      "applyToEveryResult": true
+    },
+    {
+      "expression": "@permanentid=873a9446957e979b6a99ea211c499c3b0435bbd6f21b8c788f173ae7c348",
+      "modifier": 147,
+      "isConstant": false,
+      "applyToEveryResult": true
+    },
+    {
+      "expression": "@permanentid=5d7e9f0a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f6071829304",
+      "modifier": 113,
+      "isConstant": false,
+      "applyToEveryResult": true
+    }
+  ],
+  "topResults": [
+    {
+      "expression": "@permanentid=b41f8c2d5e6a47f9a0c3d8e1b2f4a6c8d9e0f1a2b3c4d5e6f708192a3b4c",
+      "isConstant": false,
+      "matchQuery": false,
+      "matchAdvancedQuery": true,
+      "modifier": 250,
+      "exclusive": false,
+      "includeInFacets": true,
+      "applyToEveryResult": true
+    },
+    {
+      "expression": "@permanentid=873a9446957e979b6a99ea211c499c3b0435bbd6f21b8c788f173ae7c348",
+      "isConstant": false,
+      "matchQuery": false,
+      "matchAdvancedQuery": true,
+      "modifier": 147,
+      "exclusive": false,
+      "includeInFacets": true,
+      "applyToEveryResult": true
+    },
+    {
+      "expression": "@permanentid=5d7e9f0a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f6071829304",
+      "isConstant": false,
+      "matchQuery": false,
+      "matchAdvancedQuery": true,
+      "modifier": 113,
+      "exclusive": false,
+      "includeInFacets": true,
+      "applyToEveryResult": true
+    }
+  ],
+  "executionReport": {
+    "duration": 650,
+    "children": [
+      {
+        "name": "RequestId",
+        "description": "The id correlating logs for this request",
+        "duration": 0,
+        "X-Request-ID": "790f78f6-7366-45d3-97e6-cc52968f9d42"
+      },
+      {
+        "name": "Organization ID",
+        "description": "Organization ID",
+        "duration": 0,
+        "coveo_organization": "acmedemo1234"
+      },
+      {
+        "name": "PerformAuthentication",
+        "description": "Perform authentication",
+        "duration": 3,
+        "configured": {
+          "authentication": [
+            "searchapikey"
+          ]
+        }
+      },
+      {
+        "name": "ResolveQueryPipeline",
+        "description": "Resolve the query pipeline to use",
+        "duration": 1,
+        "resolvedPipeline": "support-search-pipeline",
+        "searchHub": "Support-Search-Page"
+      },
+      {
+        "name": "ApplyQueryPipeline",
+        "description": "Apply query pipeline rules",
+        "duration": 42,
+        "children": [
+          {
+            "name": "ApplyFilters",
+            "description": "Apply filter rules",
+            "duration": 4,
+            "applied": [
+              {
+                "expression": "(@source==(kb-articles,product-pages,software-downloads,videos,community-forums,unmanaged-documents,release-notes,tech-docs) OR (@source=crm-case (@casestatus==(\"'New'\",\"'Unassigned'\",\"'Pending'\",\"'Active'\",\"'Working'\") OR @caseclosedate>=today-2y))) NOT @title==\"Did you find what you are looking for?\" (@contenttype==(Products,\"Drivers and Software\") OR (@contenttype==Documents @languagecode==(en)) OR (@contenttype==Videos @languagecode==(en)) OR @source==crm-case)",
+                "type": "constant"
+              }
+            ]
+          },
+          {
+            "name": "EvaluatingTopClicks",
+            "description": "Automatic relevance tuning",
+            "duration": 0,
+            "topResults": []
+          },
+          {
+            "name": "ApplyRankingExpressions",
+            "description": "Apply ranking expression rules",
+            "duration": 2,
+            "applied": [
+              {
+                "expression": "@docid==\"replace power supply Acme RX200 Series?\"",
+                "modifier": 345,
+                "isConstant": true,
+                "applyToEveryResult": true
+              },
+              {
+                "expression": "@source==community-forums",
+                "modifier": -45,
+                "isConstant": true,
+                "applyToEveryResult": true
+              },
+              {
+                "expression": "@fulltitle=\"replace power supply Acme RX200 Series?\"",
+                "modifier": 25,
+                "isConstant": true,
+                "applyToEveryResult": true
+              },
+              {
+                "expression": "@permanentid=b41f8c2d5e6a47f9a0c3d8e1b2f4a6c8d9e0f1a2b3c4d5e6f708192a3b4c",
+                "modifier": 250,
+                "isConstant": false,
+                "applyToEveryResult": true
+              },
+              {
+                "expression": "@permanentid=873a9446957e979b6a99ea211c499c3b0435bbd6f21b8c788f173ae7c348",
+                "modifier": 147,
+                "isConstant": false,
+                "applyToEveryResult": true
+              },
+              {
+                "expression": "@permanentid=5d7e9f0a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f6071829304",
+                "modifier": 113,
+                "isConstant": false,
+                "applyToEveryResult": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "IndexQuery",
+        "description": "Query sent to the index",
+        "duration": 473,
+        "basicExpression": "PartialMatch(keywords=KeywordExpressionPartialMatchAtom(replace) KeywordExpressionPartialMatchAtom(power) KeywordExpressionPartialMatchAtom(supply) KeywordExpressionPartialMatchAtom(Acme) KeywordExpressionPartialMatchAtom(RX200) KeywordExpressionPartialMatchAtom(Series?); match=75%; pick=Unspecified(); stopWords=; noRanking=false; noHighlight=false)",
+        "advancedExpression": "(@source==support-urls OR (@source==community-forums (@category==(\"Servers\",Storage,Networking,Services,Software) OR (NOT @category))) OR @source==release-notes OR @source==tech-docs) (@publisheddate<=now OR NOT @source==software-downloads) ((@filetype==forumpost (@category==(\"Servers\",Storage,Networking,Services,Software) OR (NOT @category))) OR NOT @source==community-forums) (NOT @caseresolutioncode==(Void,\"Quick cases\") (@source<>community-forums OR (@source==community-forums ((NOT @category) OR @category==(\"Servers\",Storage,Networking,Services,Software))))) (NOT @endofsupportdate OR @endofsupportdate>=2026/08/07)",
+        "constantExpression": "(@source==(kb-articles,product-pages,software-downloads,videos,community-forums,unmanaged-documents,release-notes,tech-docs) OR (@source=crm-case (@casestatus==(\"'New'\",\"'Unassigned'\",\"'Pending'\",\"'Active'\",\"'Working'\") OR @caseclosedate>=today-2y))) NOT @title==\"Did you find what you are looking for?\" (@contenttype==(Products,\"Drivers and Software\") OR (@contenttype==Documents @languagecode==(en)) OR (@contenttype==Videos @languagecode==(en)) OR @source==crm-case)",
+        "rankingFunctions": [
+          {
+            "expression": "var min_cosine := 0.87;\nvar min_ranking_modifier := 100.0;\nvar max_ranking_modifier := 2000.0;\nvar cos_sim := @knn_vector_0185aeb4_2127_4954_bafc_781737c39708_embeddings_vector_f2fdc0cc;\nif (cos_sim >= min_cosine) {\n  var norm_cos := (cos_sim - min_cosine) / (1.0 - min_cosine);\n  var score := min_ranking_modifier + norm_cos * (max_ranking_modifier - min_ranking_modifier);\n  score\n}",
+            "normalizeWeight": false
+          }
+        ]
+      }
+    ]
+  },
+  "index": "acmedemo1234-abcdefgh-Indexer-1-zyxwvutsrqponmlkjihgfedcba",
+  "logicalIndex": "default",
+  "indexRegion": "us-east-1",
+  "indexToken": "index-token-placeholder",
+  "refinedKeywords": [],
+  "triggers": [],
+  "termsToHighlight": {
+    "replace": [
+      "replac",
+      "replaceable",
+      "replaced",
+      "replacement",
+      "replacements",
+      "replaces",
+      "replacing"
+    ],
+    "power" werable",
+      "powered",
+      "powering",
+      "powers",
+      "powerful"
+    ],
+    "supply": [
+      "suppli",
+      "supplied",
+      "supplies",
+      "supplying",
+      "supplys"
+    ],
+    "acme": [
+      "acmes"
+    ],
+    "rx200": [],
+    "series": [
+      "serial",
+      "serie"
+    ]
+  },
+  "phrasesToHighlight": {},
+  "groupByResults": [],
+  "facets": [
+    {
+      "facetId": "category",
+      "fieldcategory",
+      "moreValuesAvailable": true,
+      "values": [
+        {
+          "value": "Networking",
+          "numberOfResults": 812,
+          "state": "idle"
+        },
+        {
+          "value": "Software",
+          "numberOfResults": 143,
+          "state": "idle"
+        },
+        {
+          "value": "Services",
+          "numberOfResults": 85,
+          "state": "idle"
+        }
+      ]
+    }
+  ],
+  "suggestedFacets": [],
+  "categoryFacets": [],
+  "results": [
+    {
+      "title": "Advisory: Acme RX200/RX240 Series Switch - System May Fail to Boot After an Unexpected Power Loss",
+      "uri": "file://kb00156386en_us",
+      "printableUri": "file://kb00156386en_us",
+      "clickUri": "file://kb00156386en_us",
+      "uniqueId": "42.41204$file://kb00156386en_us",
+      "excerpt": "... an unexpected power down condition is experienced on an Acme RX240 Series or Acme RX200 Series switch, (power is cut suddenly or the power cord becomes unplugged while the system is ...",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion;SkipSentencesScoring;HasAllMetaDataStream",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 4272,
+      "percentScore": 72.834435,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [
+        "supply",
+        "replace"
+      ],
+      "raw": {
+        "systitle": "Advisory: Acme RX200/RX240 Series Switch - System May Fail to Boot After an Unexpected Power Loss",
+        "title": "Advisory: Acme RX200/RX240 Series Switch - System May Fail to Boot After an Unexpected Power Loss",
+        "sysurihash": "hash0001AAAA",
+        "urihash": "hash0001AAAA",
+        "permanentid": "e105809ee1ca46cecb753c18213a11367fea57434c39c4cad1c9cb9f1bf8",
+        "contenttype": "Documents",
+        "source": "kb-articles",
+        "syssource": "kb-articles",
+        "collection": "default",
+        "syscollection": "default",
+        "date": 1768521600000,
+        "sysdate": 1768521600000,
+        "publisheddate": 1768521600000,
+        "filetype": "txt",
+        "sysfiletype": "txt",
+        "language": [
+          "English"
+        ],
+        "syslanguage": [
+          "English"
+        ],
+        "languagecode": "en",
+        "category": "Networking",
+        "docid": "kb00156386en_us",
+        "doclocale": "en_US"
+      }
+    },
+    {
+      "title": "Acme RX200 Series Switch QuickSpecs",
+      "uri": "file://kb50009232enw",
+      "printableUri": "file://kb50009232enw",
+      "clickUri": "file://kb50009232enw",
+      "uniqueId": "42.41204$file://kb50009232enw",
+      "excerpt": "Technical specifications for the Acme RX200 Series switch, including supported power supply modules, port density, and environmental requirements.",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion;SkipSentencesScoring;HasAllMetaDataStream",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 3988,
+      "percentScore": 68.10221,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [
+        "supply",
+        "replace"
+      ],
+      "raw": {
+        "systitle": "Acme RX200 Series Switch QuickSpecs",
+        "title": "Acme RX200 Series Switch QuickSpecs",
+        "sysurihash": "hash0002AAAA",
+        "urihash": "hash0002AAAA",
+        "permanentid": "3e791bf239990f63635f4ad0041f497cb02f99f46a3c5fc5dfaeb05c3f18",
+        "contenttype": "Products",
+        "source": "product-pages",
+        "syssource": "product-pages",
+        "collection": "default",
+        "syscollection": "default",
+        "date": 1768521600000,
+        "sysdate": 1768521600000,
+        "publisheddate": 1768521600000,
+        "filetype": "txt",
+        "sysfiletype": "txt",
+        "language": [
+          "English"
+        ],
+        "syslanguage": [
+          "English"
+        ],
+        "languagecode": "en",
+        "category": "Networking",
+        "docid": "kb50009232enw",
+        "doclocale": "en_US"
+      }
+    },
+    {
+      "title": "Power supply replacement procedure for Acme RX200 Series",
+      "uri": "file://kb00187744en_us",
+      "printableUri": "file://kb00187744en_us",
+      "clickUri": "file://kb00187744en_us",
+      "uniqueId": "42.41204$file://kb00187744en_us",
+      "excerpt": "This procedure describes how to remove and replace a failed power supply module in an Acme RX200 Series switch without powering down the chassis.",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion;SkipSentencesScoring;HasAllMetaDataStream",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 3903,
+      "percentScore": 66.5142,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [],
+      "raw": {
+        "systitle": "Power supply replacement procedure for Acme RX200 Series",
+        "title": "Power supply replacement procedure for Acme RX200 Series",
+        "sysurihash": "hash0003AAAA",
+        "urihash": "hash0003AAAA",
+        "permanentid": "fa93c4025a717981d454682f5667ddd2608c15bc294f89d35e4f2a766c27",
+        "contenttype": "Documents",
+        "source": "kb-articles",
+        "syssource": "kb-articles",
+        "collection": "default",
+        "syscollection": "default",
+        "date": 1768521600000,
+        "sysdate": 1768521600000,
+        "publisheddate": 1768521600000,
+        "filetype": "txt",
+        "sysfiletype": "txt",
+        "language": [
+          "English"
+        ],
+        "syslanguage": [
+          "English"
+        ],
+        "languagecode": "en",
+        "category": "Networking",
+        "docid": "kb00187744en_us",
+        "doclocale": "en_US"
+      }
+    },
+    {
+      "title": "Acme RX200 Series power supply installation guide",
+      "uri": "file://kb00190112en_us",
+      "printableUri": "file://kb00190112en_us",
+      "clickUri": "file://kb00190112en_us",
+      "uniqueId": "42.41204$file://kb00190112en_us",
+      "excerpt": "Step-by-step installation instructions for hot-swappable power supply units on Acme RX200 Series switches.",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion;SkipSentencesScoring;HasAllMetaDataStream",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 3440,
+      "percentScore": 58.7734,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [],
+      "raw": {
+        "systitle": "Acme RX200 Series power supply installation guide",
+        "title": "Acme RX200 Series power supply installation guide",
+        "sysurihash": "hash0004AAAA",
+        "urihash": "hash0004AAAA",
+        "permanentid": "b41f8c2d5e6a47f9a0c3d8e1b2f4a6c8d9e0f1a2b3c4d5e6f708192a3b4c",
+        "contenttype": "Documents",
+        "source": "kb-articles",
+        "syssource": "kb-articles",
+        "collection": "default",
+        "syscollection": "default",
+        "date": 1768521600000,
+        "sysdate": 1768521600000,
+        "publisheddate": 1768521600000,
+        "filetype": "txt",
+        "sysfiletype": "txt",
+        "language": [
+          "English"
+        ],
+        "syslanguage": [
+          "English"
+        ],
+        "languagecode": "en",
+        "category": "Networking",
+        "docid": "kb00190112en_us",
+        "doclocale": "en_US"
+      }
+    },
+    {
+      "title": "Acme RX240 Series power distribution overview",
+      "uri": "file://kb00190998en_us",
+      "printableUri": "file://kb00190998en_us",
+      "clickUri": "file://kb00190998en_us",
+      "uniqueId": "42.41204$file://kb00190998en_us",
+      "excerpt": "Overview of the power distribution architecture used across the Acme RX240 Series chassis.",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion;SkipSentencesScoring;HasAllMetaDataStream",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 3042,
+      "percentScore": 55.2011,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [
+        "replace",
+        "rx200"
+      ],
+      "raw": {
+        "systitle": "Acme RX240 Series power distribution overview",
+        "title": "Acme RX240 Series power distribution overview",
+        "sysurihash": "hash0005AAAA",
+        "urihash": "hash0005AAAA",
+        "permanentid": "873a9446957e979b6a99ea211c499c3b0435bbd6f21b8c788f173ae7c348",
+        "contenttype": "Documents",
+        "source": "tech-docs",
+        "syssource": "tech-docs",
+        "collection": "default",
+        "syscollection": "default",
+        "date": 1768521600000,
+        "sysdate": 1768521600000,
+        "publisheddate": 1768521600000,
+        "filetype": "txt",
+        "sysfiletype": "txt",
+        "language": [
+          "English"
+        ],
+        "syslanguage": [
+          "English"
+        ],
+        "languagecode": "en",
+        "category": "Networking",
+        "docid": "kb00190998en_us",
+        "doclocale": "en_US"
+      }
+    },
+    {
+      "title": "Replacing a fan tray on Acme RX200 Series switches",
+      "uri": "file://kb00191455en_us",
+      "printableUri": "file://kb00191455en_us",
+      "clickUri": "file://kb00191455en_us",
+      "uniqueId": "42.41204$file://kb00191455en_us",
+      "excerpt": "Fan tray removal and replacement steps for Acme RX200 Series switches.",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion;SkipSentencesScoring;HasAllMetaDataStream",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 2836,
+      "percentScore": 51.4408,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [
+        "power",
+        "supply"
+      ],
+      "raw": {
+        "systitle": "Replacing a fan tray on Acme RX200 Series switches",
+        "title": "Replacing a fan tray on Acme RX200 Series switches",
+        "sysurihash": "hash0006AAAA",
+        "urihash": "hash0006AAAA",
+        "permanentid": "5d7e9f0a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f6071829304",
+        "contenttype": "Documents",
+        "source": "kb-articles",
+        "syssource": "kb-articles",
+        "collection": "default",
+        "syscollection": "default",
+        "date": 1768521600000,
+        "sysdate": 1768521600000,
+        "publisheddate": 1768521600000,
+        "filetype": "txt",
+        "sysfiletype": "txt",
+        "language": [
+          "English"
+        ],
+        "syslanguage": [
+          "English"
+        ],
+        "languagecode": "en",
+        "category": "Networking",
+        "docid": "kb00191455en_us",
+        "doclocale": "en_US"
+      }
+    },
+    {
+      "title": "Community: RX200 keeps rebooting after power outage",
+      "uri": "file://forum-3391104",
+      "printableUri": "file://forum-3391104",
+      "clickUri": "file://forum-3391104",
+      "uniqueId": "42.41204$file://forum-3391104",
+      "excerpt": "Has anyone seen an RX200 fail to come back up after a site power outage? Console shows no POST.",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion;SkipSentencesScoring;HasAllMetaDataStream",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 1771,
+      "percentScore": 44.9012,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [
+        "replace",
+        "supply",
+        "series"
+      ],
+      "raw": {
+        "systitle": "Community: RX200 keeps rebooting after power outage",
+        "title": "Community: RX200 keeps rebooting after power outage",
+        "sysurihash": "hash0007AAAA",
+        "urihash": "hash0007AAAA",
+        "permanentid": "7a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f607182930a1b2c3d",
+        "contenttype": "Documents",
+        "source": "community-forums",
+        "syssource": "community-forums",
+        "collection": "default",
+        "syscollection": "default",
+        "date": 1768521600000,
+        "sysdate": 1768521600000,
+        "publisheddate": 1768521600000,
+        "filetype": "txt",
+        "sysfiletype": "txt",
+        "language": [
+          "English"
+        ],
+        "syslanguage": [
+          "English"
+        ],
+        "languagecode": "en",
+        "category": "Networking",
+        "docid": "forum-3391104",
+        "doclocale": "en_US"
+      }
+    },
+    {
+      "title": "Acme RX200 Series release notes 10.4.2",
+      "uri": "file://relnotes-10-4-2",
+      "printableUri": "file://relnotes-10-4-2",
+      "clickUri": "file://relnotes-10-4-2",
+      "uniqueId": "42.41204$file://relnotes-10-4-2",
+      "excerpt": "Resolved issues and known limitations in Acme RX200 Series software release 10.4.2.",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion;SkipSentencesScoring;HasAllMetaDataStream",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 1656,
+      "percentScore": 41.2277,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [
+        "replace",
+        "power",
+        "supply"
+      ],
+      "raw": {
+        "systitle": "Acme RX200 Series release notes 10.4.2",
+        "title": "Acme RX200 Series release notes 10.4.2",
+        "sysurihash": "hash0008AAAA",
+        "urihash": "hash0008AAAA",
+        "permanentid": "9f8e7d6c5b4a39281716059483726150f4e3d2c1b0a99887766554433221",
+        "contenttype": "Documents",
+        "source": "release-notes",
+        "syssource": "release-notes",
+        "collection": "default",
+        "syscollection": "default",
+        "date": 1768521600000,
+        "sysdate": 1768521600000,
+        "publisheddate": 1768521600000,
+        "filetype": "txt",
+        "sysfiletype": "txt",
+        "language": [
+          "English"
+        ],
+        "syslanguage": [
+          "English"
+        ],
+        "languagecode": "en",
+        "category": "Networking",
+        "docid": "relnotes-10-4-2",
+        "doclocale": "en_US"
+      }
+    },
+    {
+      "title": "Ordering spare parts for Acme networking hardware",
+      "uri": "file://kb00177031en_us",
+      "printableUri": "file://kb00177031en_us",
+      "clickUri": "file://kb00177031en_us",
+      "uniqueId": "42.41204$file://kb00177031en_us",
+      "excerpt": "How to identify and order replacement parts, including power supplies, for Acme networking hardware under warranty.",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion;SkipSentencesScoring;HasAllMetaDataStream",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 1497,
+      "percentScore": 38.6641,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [
+        "replace",
+        "power",
+        "rx200"
+      ],
+      "raw": {
+        "systitle": "Ordering spare parts for Acme networking hardware",
+        "title": "Ordering spare parts for Acme networking hardware",
+        "sysurihash": "hash0009AAAA",
+        "urihash": "hash0009AAAA",
+        "permanentid": "1a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7",
+        "contenttype": "Documents",
+        "source": "kb-articles",
+        "syssource": "kb-articles",
+        "collection": "default",
+        "syscollection": "default",
+        "date": 1768521600000,
+        "sysdate": 1768521600000,
+        "publisheddate": 1768521600000,
+        "filetype": "txt",
+        "sysfiletype": "txt",
+        "language": [
+          "English"
+        ],
+        "syslanguage": [
+          "English"
+        ],
+        "languagecode": "en",
+        "category": "Services",
+        "docid": "kb00177031en_us",
+        "doclocale": "en_US"
+      }
+    },
+    {
+      "title": "Video: Hot-swapping a power supply module",
+      "uri": "file://video-88213",
+      "printableUri": "file://video-88213",
+      "clickUri": "file://video-88213",
+      "uniqueId": "42.41204$file://video-88213",
+      "excerpt": "A short walkthrough showing how to hot-swap a redundant power supply module.",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion;SkipSentencesScoring;HasAllMetaDataStream",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 1423,
+      "percentScore": 34.1129,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [
+        "replace",
+        "acme",
+        "rx200"
+      ],
+      "raw": {
+        "systitle": "Video: Hot-swapping a power supply module",
+        "title": "Video: Hot-swapping a power supply module",
+        "sysurihash": "hash0010AAAA",
+        "urihash": "hash0010AAAA",
+        "permanentid": "2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8",
+        "contenttype": "Videos",
+        "source": "videos",
+        "syssource": "videos",
+        "collection": "default",
+        "syscollection": "default",
+        "date": 1768521600000,
+        "sysdate": 1768521600000,
+        "publisheddate": 1768521600000,
+        "filetype": "txt",
+        "sysfiletype": "txt",
+        "language": [
+          "English"
+        ],
+        "syslanguage": [
+          "English"
+        ],
+        "languagecode": "en",
+        "category": "Networking",
+        "docid": "video-88213",
+        "doclocale": "en_US"
+      }
+    },
+    {
+      "title": "Acme switch software downloads",
+      "uri": "file://sw-rx200-index",
+      "printableUri": "file://sw-rx200-index",
+      "clickUri": "file://sw-rx200-index",
+      "uniqueId": "42.41204$file://sw-rx200-index",
+      "excerpt": "Firmware and driver downloads for Acme switching platforms.",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion;SkipSentencesScoring;HasAllMetaDataStream",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 1050,
+      "percentScore": 29.8803,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [
+        "replace",
+        "power",
+        "supply",
+        "rx200"
+      ],
+      "raw": {
+        "systitle": "Acme switch software downloads",
+        "title": "Acme switch software downloads",
+        "sysurihash": "hash0011AAAA",
+        "urihash": "hash0011AAAA",
+        "permanentid": "3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f809",
+        "contenttype": "Drivers and Software",
+        "source": "software-downloads",
+        "syssource": "software-downloads",
+        "collection": "default",
+        "syscollection": "default",
+        "date": 1768521600000,
+        "sysdate": 1768521600000,
+        "publisheddate": 1768521600000,
+        "filetype": "txt",
+        "sysfiletype": "txt",
+        "language": [
+          "English"
+        ],
+        "syslanguage": [
+          "English"
+        ],
+        "languagecode": "en",
+        "category": "Software",
+        "docid": "sw-rx200-index",
+        "doclocale": "en_US"
+      }
+    },
+    {
+      "title": "Case 00412355 - RX200 power supply LED amber",
+      "uri": "file://case-00412355",
+      "printableUri": "file://case-00412355",
+      "clickUri": "file://case-00412355",
+      "uniqueId": "42.41204$file://case-00412355",
+      "excerpt": "Customer reports an amber power supply LED after a firmware upgrade on an RX200 switch.",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion;SkipSentencesScoring;HasAllMetaDataStream",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 969,
+      "percentScore": 24.5517,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [
+        "replace",
+        "supply",
+        "series"
+      ],
+      "raw": {
+        "systitle": "Case 00412355 - RX200 power supply LED amber",
+        "title": "Case 00412355 - RX200 power supply LED amber",
+        "sysurihash": "hash0012AAAA",
+        "urihash": "hash0012AAAA",
+        "permanentid": "4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f80910",
+        "contenttype": "Case",
+        "source": "crm-case",
+        "syssource": "crm-case",
+        "collection": "default",
+        "syscollection": "default",
+        "date": 1768521600000,
+        "sysdate": 1768521600000,
+        "publisheddate": 1768521600000,
+        "filetype": "txt",
+        "sysfiletype": "txt",
+        "language": [
+          "English"
+        ],
+        "syslanguage": [
+          "English"
+        ],
+        "languagecode": "en",
+        "category": "Networking",
+        "docid": "case-00412355",
+        "doclocale": "en_US"
+      }
+    }
+  ],
+  "extendedResults": {
+    "generativeQuestionAnsweringId": "d1f0c6a2-3b4e-4f5a-8c9d-0e1f2a3b4c5d"
+  }
+}

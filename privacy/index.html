@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy policy — Coveo Debug Inspector</title>
+    <meta name="description" content="Coveo Debug Inspector does not collect, store, or transmit any user data." />
+    <style>
+      :root {
+        --bg: #0f1420;
+        --border: #2a3346;
+        --text: #dbe2f0;
+        --muted: #8a97ad;
+        --accent: #4c8bf5;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 15px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      main { max-width: 720px; margin: 0 auto; padding: 56px 20px 80px; }
+      h1 { font-size: 26px; margin: 0 0 4px; }
+      h2 { font-size: 17px; margin: 34px 0 8px; }
+      .updated { color: var(--muted); font-size: 13px; margin: 0 0 28px; }
+      a { color: var(--accent); }
+      ul { padding-left: 20px; }
+      li { margin-bottom: 8px; }
+      code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; }
+      footer {
+        border-top: 1px solid var(--border);
+        margin-top: 44px;
+        padding-top: 18px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p><a href="../">← Coveo Debug Inspector</a></p>
+      <h1>Privacy policy</h1>
+      <p class="updated">Last updated: 4 September 2026</p>
+
+      <h2>Summary</h2>
+      <p>Coveo Debug Inspector does not collect, store, transmit, or sell any user data.</p>
+
+      <h2>What it does</h2>
+      <p>
+        The web app parses a search response that you paste or drop into the page. The Chrome
+        extension adds a <strong>Coveo</strong> panel to DevTools; while DevTools is open on a tab,
+        it reads that tab's Coveo Search API requests and responses through the
+        <code>chrome.devtools.network</code> API and renders an analysis locally in the panel.
+      </p>
+
+      <h2>Data handling</h2>
+      <ul>
+        <li>
+          <strong>No collection.</strong> Neither the web app nor the extension sends data to the
+          author or any third party. There are no analytics, telemetry or reporting calls of any
+          kind, and there is no server component. See <a href="#hosting">Website hosting</a> for the
+          one thing this does not cover.
+        </li>
+        <li>
+          <strong>No persistence.</strong> Captures are held in memory for the lifetime of the
+          DevTools session and discarded when DevTools or the tab closes. Nothing is written to
+          disk, <code>localStorage</code>, <code>chrome.storage</code>, or any remote service.
+        </li>
+        <li>
+          <strong>No account or identity.</strong> There is no sign-in and no user identifier.
+        </li>
+        <li>
+          <strong>Credential redaction.</strong> Before a captured request is displayed,
+          <code>Authorization</code>, <code>Cookie</code>, <code>Proxy-Authorization</code>,
+          <code>Set-Cookie</code> and <code>x-api-key</code> header values are replaced with
+          <code>***redacted***</code>. Credentials carried in the URL query string
+          (<code>access_token</code>, <code>api_key</code>, <code>token</code> and similar) are
+          redacted the same way.
+        </li>
+      </ul>
+
+      <h2>Replay</h2>
+      <p>
+        The panel offers an optional <strong>Replay with debug</strong> action. When you click it,
+        the extension re-issues the selected search request from the inspected page with
+        <code>debug: true</code> added, so the response includes ranking detail. It runs only on
+        your explicit action, goes only to the endpoint the page already called, and its result is
+        displayed locally and never stored or transmitted elsewhere.
+      </p>
+
+      <h2>Permissions</h2>
+      <p>
+        The extension declares no <code>permissions</code> and no <code>host_permissions</code>. It
+        works solely through the DevTools extension API, scoped to the tab whose DevTools window you
+        have open.
+      </p>
+
+      <h2 id="hosting">Website hosting</h2>
+      <p>
+        This website and the web app are served as static files by a third-party hosting provider.
+        Like any web server, it writes standard request logs that include visitor IP addresses, for
+        security and abuse prevention. Those logs are held by the hosting provider under its own
+        privacy policy; this project neither receives nor uses them. Nothing you paste into the web
+        app is included — parsing happens entirely in your browser and is never uploaded.
+      </p>
+      <p>
+        The Chrome extension loads nothing from this site, so it is unaffected.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about this policy can be raised as an issue on the project's source repository.
+      </p>
+
+      <footer>
+        Not affiliated with, endorsed by, or sponsored by Coveo Solutions Inc.
+      </footer>
+    </main>
+  </body>
+</html>

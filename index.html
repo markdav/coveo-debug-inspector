@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coveo Debug Inspector — offline search debugging</title>
+    <meta
+      name="description"
+      content="A fully client-side inspector for Coveo debug search responses, with a Chrome DevTools panel. Nothing leaves your browser."
+    />
+    <style>
+      :root {
+        --bg: #0f1420;
+        --panel: #171d2b;
+        --border: #2a3346;
+        --text: #dbe2f0;
+        --muted: #8a97ad;
+        --accent: #4c8bf5;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 15px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      main { max-width: 780px; margin: 0 auto; padding: 56px 20px 80px; }
+      h1 { font-size: 30px; margin: 0 0 8px; }
+      h2 { font-size: 18px; margin: 40px 0 10px; }
+      .tagline { color: var(--muted); font-size: 17px; margin: 0 0 28px; }
+      a { color: var(--accent); }
+      .cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0 8px; }
+      .cta a {
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 10px 16px;
+        text-decoration: none;
+        background: var(--panel);
+      }
+      .cta a.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+      ul { padding-left: 20px; }
+      li { margin-bottom: 6px; }
+      code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; }
+      footer {
+        border-top: 1px solid var(--border);
+        margin-top: 48px;
+        padding-top: 20px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .disclaimer { margin-top: 10px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Coveo Debug Inspector</h1>
+      <p class="tagline">
+        Read a captured Coveo <code>debug:true</code> search response and work out why a document
+        ranked where it did — without replaying the query.
+      </p>
+
+      <div class="cta">
+        <a class="primary" href="app/">Open the web app</a>
+        <a href="privacy/">Privacy policy</a>
+      </div>
+
+      <h2>Why not just replay the query?</h2>
+      <p>
+        Coveo's built-in Query Inspector replays a query, so it runs under <em>your</em> identity and
+        permissions rather than the original searcher's. When you are debugging a real user's
+        problem — a missing document, an answer that never appeared, a permission-scoped filter —
+        a replay quietly gives you someone else's results.
+      </p>
+      <p>
+        A captured debug response already holds what actually happened under the original user's
+        permissions. This tool reads that capture and explains it.
+      </p>
+
+      <h2>What it shows</h2>
+      <ul>
+        <li>Expanded query expressions, partial-match atoms and the filter trees that were applied.</li>
+        <li>Per-result score composition, reconciled down to the residual.</li>
+        <li>The decoded semantic ranking function, including its <code>min_cosine</code> gate.</li>
+        <li>Generative answers: the reassembled text, its citations and the passages behind them.</li>
+        <li>Agentic runs: each step, its duration, and the query the agent actually searched for.</li>
+        <li>Heuristics for common failure modes, such as an expected document sitting below the semantic gate.</li>
+      </ul>
+
+      <h2>Two ways to use it</h2>
+      <p>
+        The <a href="app/">web app</a> takes a pasted response plus an optional request. The Chrome
+        DevTools extension adds a <strong>Coveo</strong> panel that lists Coveo API traffic live, and
+        can re-issue a search request with <code>debug: true</code> when you need ranking detail the
+        page never asked for.
+      </p>
+
+      <h2>Privacy</h2>
+      <p>
+        Everything runs in your browser. The web app makes no network calls at all. Nothing is
+        stored, nothing is transmitted, and credentials in headers or URLs are redacted on ingest.
+        See the <a href="privacy/">privacy policy</a> for the details.
+      </p>
+
+      <footer>
+        <div>Coveo Debug Inspector — an independent, open-source debugging tool.</div>
+        <div class="disclaimer">
+          Not affiliated with, endorsed by, or sponsored by Coveo Solutions Inc. "Coveo" is a
+          trademark of its respective owner and is used here only to describe what this tool
+          inspects.
+        </div>
+      </footer>
+    </main>
+  </body>
+</html>
