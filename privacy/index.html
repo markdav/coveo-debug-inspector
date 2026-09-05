@@ -3,8 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Privacy policy — Coveo Debug Inspector</title>
-    <meta name="description" content="Coveo Debug Inspector does not collect, store, or transmit any user data." />
+    <title>Privacy policy — Debug Inspector for Coveo</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <meta name="description" content="Debug Inspector for Coveo does not collect, store, or transmit any user data." />
     <style>
       :root {
         --bg: #0f1420;
@@ -22,6 +24,9 @@
       }
       main { max-width: 720px; margin: 0 auto; padding: 56px 20px 80px; }
       h1 { font-size: 26px; margin: 0 0 4px; }
+      .brand { display: flex; align-items: center; gap: 14px; }
+      .brand img { width: 40px; height: 40px; }
+      .brand h1 { margin: 0; }
       h2 { font-size: 17px; margin: 34px 0 8px; }
       .updated { color: var(--muted); font-size: 13px; margin: 0 0 28px; }
       a { color: var(--accent); }
@@ -39,18 +44,21 @@
   </head>
   <body>
     <main>
-      <p><a href="../">← Coveo Debug Inspector</a></p>
-      <h1>Privacy policy</h1>
+      <p><a href="../">← Debug Inspector for Coveo</a></p>
+      <div class="brand">
+        <img src="/favicon.svg" width="40" height="40" alt="" />
+        <h1>Privacy policy</h1>
+      </div>
       <p class="updated">Last updated: 4 September 2026</p>
 
       <h2>Summary</h2>
-      <p>Coveo Debug Inspector does not collect, store, transmit, or sell any user data.</p>
+      <p>Debug Inspector for Coveo does not collect, store, transmit, or sell any user data.</p>
 
       <h2>What it does</h2>
       <p>
         The web app parses a search response that you paste or drop into the page. The Chrome
-        extension adds a <strong>Coveo</strong> panel to DevTools; while DevTools is open on a tab,
-        it reads that tab's Coveo Search API requests and responses through the
+        extension adds a <strong>Inspect Coveo</strong> panel to DevTools; while DevTools is open on
+        a tab, it reads that tab's Coveo Search API requests and responses through the
         <code>chrome.devtools.network</code> API and renders an analysis locally in the panel.
       </p>
 

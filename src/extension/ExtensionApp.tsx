@@ -46,7 +46,7 @@ export function ExtensionApp() {
   return (
     <div className="extension-app">
       <header className="extension-toolbar">
-        <h1>Coveo</h1>
+        <h1>Inspect Coveo</h1>
         <span className={`capture-status ${bridge ? 'active' : ''}`}>
           {bridge ? 'Recording' : 'Connecting'}
         </span>

@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Coveo Debug Inspector",
+  "name": "Debug Inspector for Coveo",
   "description": "Inspect Coveo requests and analyze debug search responses in Chrome DevTools.",
   "version": "1.0.0",
   "icons": {

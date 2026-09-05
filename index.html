@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Coveo Debug Inspector — offline search debugging</title>
+    <title>Debug Inspector for Coveo — offline search debugging</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
     <meta
       name="description"
       content="A fully client-side inspector for Coveo debug search responses, with a Chrome DevTools panel. Nothing leaves your browser."
@@ -40,6 +42,11 @@
       .cta a.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
       ul { padding-left: 20px; }
       li { margin-bottom: 6px; }
+      figure { margin: 24px 0; }
+      figure img {
+        width: 100%; display: block; border: 1px solid var(--border); border-radius: 6px;
+      }
+      figcaption { color: var(--muted); font-size: 13px; margin-top: 8px; }
       code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; }
       footer {
         border-top: 1px solid var(--border);
@@ -53,9 +60,9 @@
   </head>
   <body>
     <main>
-      <h1>Coveo Debug Inspector</h1>
+      <h1>Debug Inspector for Coveo</h1>
       <p class="tagline">
-        Read a captured Coveo <code>debug:true</code> search response and work out why a document
+        Quickly read a captured Coveo <code>debug:true</code> search response and work out why a document
         ranked where it did — without replaying the query.
       </p>
 
@@ -64,16 +71,21 @@
         <a href="privacy/">Privacy policy</a>
       </div>
 
-      <h2>Why not just replay the query?</h2>
+      <h2>Why is this handy?</h2>
       <p>
-        Coveo's built-in Query Inspector replays a query, so it runs under <em>your</em> identity and
-        permissions rather than the original searcher's. When you are debugging a real user's
-        problem — a missing document, an answer that never appeared, a permission-scoped filter —
-        a replay quietly gives you someone else's results.
+        Earlier versions of Coveo had a built in debug view in the client, but these were replaced by the Coveo Debug Inspector tool 
+        in the admin console but they moved away from this when they moved to atomic.
+        
+        The admin console one is great, but has the following drawbacks:
+
+        1. It takes a few minutes and some extra steps to fetch the search id and go to the admin panel
+        2. Sometimes you can't find the original query for a while
+        3.  This is the most critical - it replays the query using the permissions of the admin user in the coveo dashboard.. you lose the context 
+        of the original query and the original user. This can be a problem when debugging why a document didn't show up for a user,
       </p>
       <p>
         A captured debug response already holds what actually happened under the original user's
-        permissions. This tool reads that capture and explains it.
+        permissions. This tool reads that capture and explains it, and the results are immediate!
       </p>
 
       <h2>What it shows</h2>
@@ -88,11 +100,43 @@
 
       <h2>Two ways to use it</h2>
       <p>
-        The <a href="app/">web app</a> takes a pasted response plus an optional request. The Chrome
-        DevTools extension adds a <strong>Coveo</strong> panel that lists Coveo API traffic live, and
-        can re-issue a search request with <code>debug: true</code> when you need ranking detail the
-        page never asked for.
+        The <a href="app/">web app</a> takes a pasted response plus an optional request. Use this approach if you don't want to be bothered installing a browser extension.
       </p>
+      <p>
+        The browser DevTools extension (currently only Chrome) adds a <strong>Inspect Coveo</strong> panel that lists Coveo API traffic
+        live, and can re-issue a search request with <code>debug: true</code> when you need ranking
+        detail the page never asked for.  This is quicker and more powerful since you can replay queries there and then and also trace analytics and generative traffic.
+      </p>
+
+      <h2>See it working</h2>
+      <figure>
+        <img src="/screenshots/1-review-requests.png" alt="The DevTools panel listing captured Coveo requests, classified by family" loading="lazy" />
+        <figcaption>Every Coveo call the page makes, classified and filterable.</figcaption>
+      </figure>
+      <figure>
+        <img src="/screenshots/2-view-search-replay.png" alt="Debug analysis of a captured search response" loading="lazy" />
+        <figcaption>Search responses get the full inspector, and can be replayed with debug enabled.</figcaption>
+      </figure>
+      <figure>
+        <img src="/screenshots/3-debug-query-relevance.png" alt="Score contributions per result, with ART broken out from pipeline rules" loading="lazy" />
+        <figcaption>
+          Each score decomposed into its components, so a document boosted by click behaviour is
+          distinguishable from one that earned its position.
+        </figcaption>
+      </figure>
+
+      <h2>About</h2>
+      <p>
+        My name is <a href="https://github.com/markdav">Mark Davis</a>. I work on search and AI at <a href="https://www.hpe.com/">HPE</a> and built this tool in my spare time. 
+        It is open source, and you can find the code on <a href="https://github.com/markdav/coveo-debug-inspector">GitHub</a>. 
+        
+        Coveo is a fantastic product and team and a market leader in enterprise search.  For more information on Coveo, see <a href="https://www.coveo.com/">coveo.com</a>. 
+      </p>
+
+      <h2>Remembering Ed</h2>
+      <p>
+        Ed Quinn was a brilliant engineer and a good friend. He was a Coveo architect who sadly passed away a few years ago while we were working on the same project - me as a customer/architect on the HPE side and he as a solution Architect from the Coveo side.  I learned a lot working with Ed and dedicate this tool to his memory.
+      </p>      
 
       <h2>Privacy</h2>
       <p>
@@ -102,11 +146,11 @@
       </p>
 
       <footer>
-        <div>Coveo Debug Inspector — an independent, open-source debugging tool.</div>
+        <div>Debug Inspector for Coveo — an independent, open-source debugging tool.</div>
         <div class="disclaimer">
-          Not affiliated with, endorsed by, or sponsored by Coveo Solutions Inc. "Coveo" is a
+          This is just a useful simple utility. Not affiliated with, endorsed by, or sponsored by Coveo Solutions Inc. "Coveo" is a
           trademark of its respective owner and is used here only to describe what this tool
-          inspects.
+          inspects. 
         </div>
       </footer>
     </main>

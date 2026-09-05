@@ -163,15 +163,20 @@ function buildResults(resp: Record<string, unknown>, ranking: RankingModel): Res
   return arr.map((r, i) => {
     const raw = (r.raw as Record<string, unknown>) ?? {};
     const rankingInfo = parseRankingInfo(str(r.rankingInfo));
+    // JSON payloads label ART directly; legacy text needs the execution report.
+    const declaredArt = rankingInfo?.qre
+      .filter((entry) => entry.ruleType === 'automatic_relevance_tuning' && entry.score > 0)
+      .reduce((total, entry) => total + entry.score, 0) ?? 0;
     const artExpressions = new Set(
       ranking.artExpressions
         .map((expression) => permanentIdFromExpression(expression.expression))
         .filter((permanentId): permanentId is string => permanentId !== null),
     );
-    const artBoost = rankingInfo?.qre.find((entry) => {
+    const inferredArt = rankingInfo?.qre.find((entry) => {
       const permanentId = permanentIdFromExpression(entry.expression);
       return entry.score > 0 && permanentId !== null && artExpressions.has(permanentId);
     })?.score ?? null;
+    const artBoost = declaredArt > 0 ? declaredArt : inferredArt;
     const explicitlyRecommended =
       boolish(r.is_recommended) ||
       boolish(raw.is_recommended) ||

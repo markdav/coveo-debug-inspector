@@ -1,4 +1,9 @@
-import type { ExecNode, RankingInfo, SemanticFunction } from '../model/types';
+import type {
+  ExecNode,
+  RankingInfo,
+  ScoredExpression,
+  SemanticFunction,
+} from '../model/types';
 
 /**
  * Parse a per-result `rankingInfo` debug payload. Coveo emits either the legacy
@@ -23,12 +28,19 @@ export function parseRankingInfo(raw: string | null | undefined): RankingInfo | 
   const rankingFunctions =
     'Ranking functions' in weights ? weights['Ranking functions'] : null;
 
-  const parseScoredExpressions = (section: string): { expression: string; score: number }[] => {
-    const entries: { expression: string; score: number }[] = [];
+  // The legacy text form carries no rule provenance.
+  const parseScoredExpressions = (section: string): ScoredExpression[] => {
+    const entries: ScoredExpression[] = [];
     const expressionRe = /Expression:\s*([\s\S]*?)\s*Score:\s*(-?\d+(?:\.\d+)?)(?=\n|$)/g;
     let entry: RegExpExecArray | null;
     while ((entry = expressionRe.exec(section)) !== null) {
-      entries.push({ expression: entry[1].trim(), score: Number(entry[2]) });
+      entries.push({
+        expression: entry[1].trim(),
+        score: Number(entry[2]),
+        origin: null,
+        ruleId: null,
+        ruleType: null,
+      });
     }
     return entries;
   };
@@ -50,7 +62,12 @@ export function parseRankingInfo(raw: string | null | undefined): RankingInfo | 
     while ((weightMatch = weightRe.exec(termMatch[3])) !== null) {
       termWeights[weightMatch[1].trim()] = Number(weightMatch[2]);
     }
-    terms.push({ term: termMatch[1].trim(), matches: termMatch[2].trim(), weights: termWeights });
+    terms.push({
+      term: termMatch[1].trim(),
+      matches: termMatch[2].trim(),
+      weights: termWeights,
+      variants: [],
+    });
   }
 
   return { format: 'text', weights, rankingFunctions, qre, rankingFunctionDetails, terms, raw };
@@ -91,16 +108,20 @@ function parseJsonRankingInfo(raw: string): RankingInfo | null {
   const terms = termsWeights.map((entry) => {
     const record = (entry ?? {}) as Record<string, unknown>;
     const variants = Object.entries((record.term ?? {}) as Record<string, unknown>)
-      .map(([name, detail]) => ({
-        name,
-        correlation: Number((detail as Record<string, unknown>)?.correlation ?? 0),
-      }))
-      .sort((a, b) => b.correlation - a.correlation)
-      .map(({ name }) => name);
+      .map(([name, detail]) => {
+        const stats = (detail ?? {}) as Record<string, unknown>;
+        return {
+          name,
+          correlation: Number(stats.correlation ?? 0),
+          idfScore: typeof stats.idfScore === 'number' ? stats.idfScore : null,
+        };
+      })
+      .sort((a, b) => b.correlation - a.correlation);
     return {
-      term: variants[0] ?? '(unknown)',
-      matches: variants.join(', '),
+      term: variants[0]?.name ?? '(unknown)',
+      matches: variants.map(({ name }) => name).join(', '),
       weights: weightRecord(record.weightInfo),
+      variants,
     };
   });
 
@@ -130,15 +151,21 @@ function humanizeKey(key: string): string {
   return spaced.charAt(0).toUpperCase() + spaced.slice(1);
 }
 
-function scoredExpressions(source: unknown): { expression: string; score: number }[] {
+function scoredExpressions(source: unknown): ScoredExpression[] {
   if (!Array.isArray(source)) return [];
   return source
     .map((entry) => (entry ?? {}) as Record<string, unknown>)
     .filter((entry) => typeof entry.expression === 'string')
-    .map((entry) => ({
-      expression: String(entry.expression),
-      score: typeof entry.score === 'number' ? entry.score : 0,
-    }));
+    .map((entry) => {
+      const rule = (entry.rule ?? {}) as Record<string, unknown>;
+      return {
+        expression: String(entry.expression),
+        score: typeof entry.score === 'number' ? entry.score : 0,
+        origin: typeof entry.origin === 'string' ? entry.origin : null,
+        ruleId: typeof rule.id === 'string' ? rule.id : null,
+        ruleType: typeof rule.type === 'string' ? rule.type : null,
+      };
+    });
 }
 
 /**

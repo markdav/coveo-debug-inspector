@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Debug Inspector for Coveo">
+  <rect width="512" height="512" rx="113" fill="#171c26" />
+  <g>
+    <rect x="100" y="92" width="48" height="307" rx="16" fill="#5ec8a8" />
+    <rect x="171" y="164" width="48" height="235" rx="16" fill="#566884" />
+    <rect x="242" y="225" width="48" height="174" rx="16" fill="#566884" />
+    <rect x="313" y="277" width="48" height="122" rx="16" fill="#566884" />
+  </g>
+  <circle cx="307" cy="215" r="135" fill="#171c26" />
+  <circle cx="307" cy="215" r="107" fill="none" stroke="#e9eef5" stroke-width="28" />
+  <line x1="384" y1="292" x2="473" y2="381" stroke="#e9eef5" stroke-width="28" stroke-linecap="round" />
+</svg>

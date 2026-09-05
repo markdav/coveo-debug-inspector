@@ -27,7 +27,7 @@ export function Dropzone() {
       }}
       onDragLeave={() => setDrag(false)}
     >
-      <h2>Coveo Debug Inspector</h2>
+      <h2>Debug Inspector for Coveo</h2>
       <p>{SAMPLE_HINT}</p>
       <p className="muted" style={{ fontSize: 12 }}>
         Everything runs locally in your browser. No query is replayed and no data leaves this page.

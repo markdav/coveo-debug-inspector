@@ -59,6 +59,7 @@ a { color: var(--accent); }
   z-index: 10;
 }
 .app-header h1 { font-size: 16px; margin: 0; font-weight: 600; }
+.app-logo { display: block; border-radius: 5px; }
 .app-header .sub { color: var(--muted); font-size: 12px; }
 .app-header .privacy { margin-left: auto; color: var(--ok); font-size: 12px; }
 
@@ -232,6 +233,8 @@ table.results tr.result-row.selected td:first-child { box-shadow: inset 3px 0 va
 .scored-expression { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--border); }
 .scored-expression code { white-space: pre-wrap; overflow-wrap: anywhere; color: var(--text); font-size: 10px; max-height: 90px; overflow: auto; }
 .scored-expression strong { font-family: var(--mono); }
+.rule-origin { grid-column: 1 / -1; color: var(--muted); font-size: 10px; font-family: var(--mono); overflow-wrap: anywhere; }
+.rule-origin .rule-ml { color: var(--score-art); }
 .art-status { margin-top: 10px; }
 .result-excerpt { color: var(--muted); margin: 0 0 10px; }
 .ranking-detail > section.result-metadata { grid-column: 1 / -1; }

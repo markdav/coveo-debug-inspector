@@ -8,7 +8,8 @@ export function App() {
   return (
     <>
       <header className="app-header">
-        <h1>Coveo Debug Inspector</h1>
+        <img className="app-logo" src={`${import.meta.env.BASE_URL}favicon.svg`} width={24} height={24} alt="" />
+        <h1>Debug Inspector for Coveo</h1>
         <span className="sub">offline · read-only · no replay</span>
         {session && (
           <button className="ghost" style={{ marginLeft: 'auto' }} onClick={reset}>

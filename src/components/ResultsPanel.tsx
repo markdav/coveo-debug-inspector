@@ -5,7 +5,7 @@ import {
   ruleContribution,
   semanticContribution,
 } from '../analysis/rankingContributions';
-import type { ResultDoc } from '../model/types';
+import type { ResultDoc, ScoredExpression } from '../model/types';
 import { useSession } from '../state/store';
 import { Panel } from './common';
 import { ScoreVisualizations } from './ScoreVisualizations';
@@ -242,6 +242,7 @@ function ResultRankingDetail({ result }: { result: ResultDoc }) {
   const termWeightNames = info
     ? Array.from(new Set(info.terms.flatMap((term) => Object.keys(term.weights))))
     : [];
+  const hasIdf = !!info?.terms.some((term) => term.variants.some((v) => v.idfScore != null));
 
   return (
     <tr className="ranking-detail-row">
@@ -277,6 +278,7 @@ function ResultRankingDetail({ result }: { result: ResultDoc }) {
                       <thead>
                         <tr>
                           <th>Term</th>
+                          {hasIdf && <th>IDF</th>}
                           <th>Matched variants</th>
                           {termWeightNames.map((name) => <th key={name}>{name}</th>)}
                         </tr>
@@ -285,7 +287,30 @@ function ResultRankingDetail({ result }: { result: ResultDoc }) {
                         {info.terms.map((term) => (
                           <tr key={term.term}>
                             <td className="term-name">{term.term}</td>
-                            <td className="matches">{term.matches}</td>
+                            {hasIdf && (
+                              <td className="num">
+                                {term.variants[0]?.idfScore != null
+                                  ? term.variants[0].idfScore.toFixed(1)
+                                  : '—'}
+                              </td>
+                            )}
+                            <td className="matches">
+                              {term.variants.length > 0
+                                ? term.variants.map((variant, index) => (
+                                    <span
+                                      key={variant.name}
+                                      title={`correlation ${variant.correlation.toFixed(1)}${
+                                        variant.idfScore != null
+                                          ? ` · IDF ${variant.idfScore.toFixed(1)}`
+                                          : ''
+                                      }`}
+                                    >
+                                      {index > 0 && ', '}
+                                      {variant.name}
+                                    </span>
+                                  ))
+                                : term.matches}
+                            </td>
                             {termWeightNames.map((name) => (
                               <td className="num" key={name}>{formatScore(term.weights[name] ?? 0)}</td>
                             ))}
@@ -360,7 +385,7 @@ function ScoredExpressions({
   entries,
 }: {
   label: string;
-  entries: { expression: string; score: number }[];
+  entries: ScoredExpression[];
 }) {
   return (
     <div className="scored-expressions">
@@ -369,6 +394,17 @@ function ScoredExpressions({
         <div className="scored-expression" key={`${entry.expression}-${index}`}>
           <code>{entry.expression}</code>
           <strong className={entry.score > 0 ? 'positive' : ''}>{formatScore(entry.score)}</strong>
+          {(entry.ruleType || entry.ruleId) && (
+            <div className="rule-origin">
+              {entry.ruleType && (
+                <span className={entry.ruleType === 'automatic_relevance_tuning' ? 'rule-ml' : ''}>
+                  {entry.ruleType.replace(/_/g, ' ')}
+                </span>
+              )}
+              {entry.origin && <span> · {entry.origin.replace(/_/g, ' ')}</span>}
+              {entry.ruleId && <span> · {entry.ruleId}</span>}
+            </div>
+          )}
         </div>
       )) : <div className="muted">None returned.</div>}
     </div>

@@ -146,6 +146,24 @@ export interface RankingModel {
   semantic: SemanticFunction | null;
 }
 
+/** A scored expression, with the provenance the JSON payload attaches to it. */
+export interface ScoredExpression {
+  expression: string;
+  score: number;
+  /** `query_pipeline` or `machine_learning` on JSON payloads; null on legacy text. */
+  origin: string | null;
+  ruleId: string | null;
+  /** e.g. `ranking_expression`, `automatic_relevance_tuning`, `api.ml.embeddings`. */
+  ruleType: string | null;
+}
+
+/** One matched variant of a query term. */
+export interface TermVariant {
+  name: string;
+  correlation: number;
+  idfScore: number | null;
+}
+
 /** Parsed per-result `rankingInfo`, from either the legacy text or API v2 JSON payload. */
 export interface RankingInfo {
   /** JSON payloads fold per-term weights into `weights`; text payloads keep them separate. */
@@ -153,12 +171,14 @@ export interface RankingInfo {
   weights: Record<string, number>;
   /** The semantic ranking-function contribution (a.k.a. "Ranking functions"). */
   rankingFunctions: number | null;
-  qre: { expression: string; score: number }[];
-  rankingFunctionDetails: { expression: string; score: number }[];
+  qre: ScoredExpression[];
+  rankingFunctionDetails: ScoredExpression[];
   terms: {
     term: string;
     matches: string;
     weights: Record<string, number>;
+    /** Present on JSON payloads, which report per-variant correlation and IDF. */
+    variants: TermVariant[];
   }[];
   raw: string;
 }

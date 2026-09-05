@@ -135,9 +135,11 @@ describe('ranking info + semantic function', () => {
     const info = parseRankingInfo(raw);
     expect(info?.weights['Title']).toBe(345);
     expect(info?.rankingFunctions).toBe(526);
-    expect(info?.qre).toEqual([{ expression: '"@source==docs"', score: 400 }]);
+    expect(info?.qre).toEqual([
+      { expression: '"@source==docs"', score: 400, origin: null, ruleId: null, ruleType: null },
+    ]);
     expect(info?.rankingFunctionDetails).toEqual([
-      { expression: '"semantic function"', score: 526 },
+      { expression: '"semantic function"', score: 526, origin: null, ruleId: null, ruleType: null },
     ]);
     expect(info?.terms[0]).toMatchObject({
       term: 'power',

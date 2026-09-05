@@ -1,4 +1,4 @@
-# Coveo Debug Inspector
+# Debug Inspector for Coveo
 
 A **fully client-side** tool for debugging Coveo search queries from a captured
 `debug:true` search response — without replaying the query.
@@ -28,6 +28,24 @@ A captured debug response already contains everything that happened under the
 
 This tool parses all of that into a readable, diagnostic view and runs a
 heuristics engine that flags common failure modes.
+
+## Screenshots
+
+Every Coveo call the page makes is listed and classified, with the request and
+response available without leaving DevTools.
+
+![The DevTools panel listing captured Coveo requests](public/screenshots/1-review-requests.png)
+
+Search responses get the full inspector, and a search can be re-issued with
+`debug: true` when the page did not ask for ranking detail.
+
+![Debug analysis of a captured search response](public/screenshots/2-view-search-replay.png)
+
+Each result's score is decomposed into the components that produced it, so a
+document boosted by click behaviour is distinguishable from one that earned its
+position on relevance.
+
+![Score contributions per result, with ART broken out from pipeline rules](public/screenshots/3-debug-query-relevance.png)
 
 ## Privacy
 
@@ -67,7 +85,7 @@ npm run build:extension
 1. Open `chrome://extensions` and enable **Developer mode**.
 2. Choose **Load unpacked** and select `dist-extension/`.
 3. Open DevTools before loading or reloading a Coveo-powered page.
-4. Open the **Coveo** panel.
+4. Open the **Inspect Coveo** panel.
 
 The panel records Coveo REST calls while DevTools is open, classifying Search,
 query suggestions, analytics, recommendations, generative answer streams, the

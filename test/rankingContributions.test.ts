@@ -64,7 +64,9 @@ describe('ranking contribution decomposition', () => {
           rankingFunctions: 200,
           qre: [],
           rankingFunctionDetails: [],
-          terms: [{ term: 'power', matches: '100, 1', weights: { Title: 30, Frequency: 200 } }],
+          terms: [
+            { term: 'power', matches: '100, 1', weights: { Title: 30, Frequency: 200 }, variants: [] },
+          ],
           raw: '',
         },
       },
@@ -147,5 +149,87 @@ describe('ranking contribution decomposition', () => {
     expect(influence.semantic).toBe(467);
     expect(influence.parsedTotal).toBe(4272);
     expect(influence.residual).toBe(0);
+  });
+
+  it('splits ART out of rules using the JSON payload rule type', () => {
+    const rankingInfo = {
+      documentWeights: {
+        title: 1577,
+        tfidf: 1225,
+        concept: 140,
+        formatted: 200,
+        relation: 200,
+        summary: 420,
+        queryRankingExpressions: 3010,
+        rankingFunctions: 655,
+      },
+      queryRankingExpressions: [
+        {
+          expression: '@source==(docs.example.com)',
+          origin: 'query_pipeline',
+          rule: { id: 'b1fa97b4', type: 'ranking_expression' },
+          score: 2000,
+        },
+        {
+          expression: '@permanentid=543647921baccc083c981a7436887e195',
+          origin: 'machine_learning',
+          rule: { id: 'acme_topclicks_a34cd0d9', type: 'automatic_relevance_tuning' },
+          score: 1010,
+        },
+      ],
+      rankingFunctions: [],
+      termsWeights: [],
+      totalWeight: 7427,
+    };
+    const session = buildSession(
+      JSON.stringify({ results: [{ title: 'doc', score: 7427, rankingInfo: JSON.stringify(rankingInfo), raw: {} }] }),
+    );
+    const [document] = session.results;
+
+    // No execution report here: ART is identified purely from rule.type.
+    expect(document.artBoost).toBe(1010);
+    expect(document.isRecommended).toBe(true);
+
+    const influence = decomposeResult(document);
+    expect(valueFor(influence.contributions, 'art')).toBe(1010);
+    expect(valueFor(influence.contributions, 'rules')).toBe(2000);
+    expect(influence.residual).toBe(0);
+  });
+
+  it('keeps rule provenance and per-variant IDF from a JSON payload', () => {
+    const info = parseRankingInfo(
+      JSON.stringify({
+        documentWeights: { title: 10 },
+        queryRankingExpressions: [
+          {
+            expression: '@source==docs',
+            origin: 'query_pipeline',
+            rule: { id: 'rule-1', type: 'ranking_expression' },
+            score: 5,
+          },
+        ],
+        rankingFunctions: [],
+        termsWeights: [
+          {
+            term: {
+              test: { correlation: 100, idfScore: 17.32 },
+              testing: { correlation: 43.13, idfScore: 21.59 },
+            },
+            weightInfo: { title: 10 },
+          },
+        ],
+        totalWeight: 10,
+      }),
+    );
+
+    expect(info?.qre[0]).toMatchObject({
+      origin: 'query_pipeline',
+      ruleId: 'rule-1',
+      ruleType: 'ranking_expression',
+    });
+    expect(info?.terms[0].variants).toEqual([
+      { name: 'test', correlation: 100, idfScore: 17.32 },
+      { name: 'testing', correlation: 43.13, idfScore: 21.59 },
+    ]);
   });
 });
