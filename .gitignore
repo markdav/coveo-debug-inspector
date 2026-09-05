@@ -6,6 +6,7 @@ dist/
 dist-extension/
 coverage/
 *.tsbuildinfo
+*.zip
 
 # Local environment files
 .env

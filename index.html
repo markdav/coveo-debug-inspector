@@ -73,15 +73,17 @@
 
       <h2>Why is this handy?</h2>
       <p>
-        Earlier versions of Coveo had a built in debug view in the client, but these were replaced by the Coveo Debug Inspector tool 
-        in the admin console but they moved away from this when they moved to atomic.
-        
-        The admin console one is great, but has the following drawbacks:
+        Earlier versions of CoveoUI ("Classic") had a hidden debug tool in the client, but they moved 
+        away from this when they moved to atomic in favour of the admin debug inspector tool.
+      </p>
+      <p>  
+        The admin console one is fine, but has the following drawbacks:
 
-        1. It takes a few minutes and some extra steps to fetch the search id and go to the admin panel
-        2. Sometimes you can't find the original query for a while
-        3.  This is the most critical - it replays the query using the permissions of the admin user in the coveo dashboard.. you lose the context 
-        of the original query and the original user. This can be a problem when debugging why a document didn't show up for a user,
+        <ul>
+          <li>You need to have admin panel access in the Coveo dashboard.</li>
+          <li>It requires you to find the original query and search id and paste it.</li>
+          <li>Critically: it replays the query with the permissions of the admin user, not the original user. This invalidates the whole test at times.</li>
+        </ul>
       </p>
       <p>
         A captured debug response already holds what actually happened under the original user's

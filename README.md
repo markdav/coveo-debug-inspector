@@ -100,6 +100,29 @@ without a response body. Reload the inspected page to capture complete bodies.
 Coveo endpoints proxied through a site's own origin — for example a Salesforce
 managed package — are detected by a literal `coveo` path segment.
 
+### Packaging for the Chrome Web Store
+
+```bash
+npm run package:extension
+```
+
+This builds the extension and writes `debug-inspector-for-coveo-<version>.zip`,
+containing the *contents* of `dist-extension/` so that `manifest.json` sits at
+the archive root — the store rejects a package whose manifest is nested inside a
+folder. The store also requires the version in `extension/public/manifest.json`
+to increase on every upload.
+
+Listing screenshots live in `store-assets/`, cropped to the 1280x800 the store
+demands. Regenerate them after replacing anything in `public/screenshots/`:
+
+```bash
+python3 scripts/store-screenshots.py
+```
+
+The store accepts only 1280x800 or 640x400 and requires full bleed, so the
+script crops rather than pads. Pillow is needed locally but is not a project
+dependency.
+
 ### If no requests appear
 
 Browser extensions that intercept or mock network traffic install their own
