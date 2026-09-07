@@ -333,14 +333,13 @@ input.text {
 html, #root { height: 100%; }
 
 .extension-app {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   height: 100%;
   overflow: hidden;
 }
 .extension-toolbar {
   display: flex;
-  flex: 0 0 auto;
   align-items: center;
   gap: 10px;
   min-height: 48px;
@@ -348,7 +347,6 @@ html, #root { height: 100%; }
   border-bottom: 1px solid var(--border);
   background: var(--panel);
 }
-.interceptor-notice { flex: 0 0 auto; margin: 0; border-radius: 0; border-bottom: 1px solid var(--border); }
 .extension-toolbar h1 { margin: 0 4px 0 0; font-size: 15px; }
 .extension-toolbar select, .request-filter {
   min-height: 30px;
@@ -364,7 +362,7 @@ html, #root { height: 100%; }
 .capture-status.active::before { background: var(--crit); }
 .preserve-toggle { display: inline-flex; align-items: center; gap: 5px; color: var(--muted); font-size: 12px; white-space: nowrap; }
 button.compact { min-height: 30px; padding: 4px 10px; border-radius: 5px; }
-.extension-workspace { display: grid; flex: 1 1 auto; grid-template-columns: minmax(250px, 330px) minmax(0, 1fr); min-height: 0; }
+.extension-workspace { display: grid; grid-template-columns: minmax(250px, 330px) minmax(0, 1fr); min-height: 0; }
 .request-list { overflow: auto; border-right: 1px solid var(--border); background: var(--bg); }
 .request-list-heading { position: sticky; top: 0; z-index: 2; padding: 7px 10px; border-bottom: 1px solid var(--border); background: var(--panel); color: var(--muted); font-size: 11px; }
 .request-item {

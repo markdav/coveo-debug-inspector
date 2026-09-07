@@ -38,7 +38,6 @@ export function ExtensionApp() {
     .filter((exchange) => matchesFilter(exchange, filter))
     .reverse();
   const selected = snapshot.exchanges.find(({ id }) => id === selectedId) ?? null;
-  const interceptorWarning = describeInterceptors(snapshot.interceptors);
 
   useEffect(() => {
     if (selectedId && snapshot.exchanges.some(({ id }) => id === selectedId)) return;
@@ -84,14 +83,6 @@ export function ExtensionApp() {
         </button>
       </header>
 
-      {interceptorWarning && (
-        <div className="notice warn interceptor-notice">
-          {interceptorWarning} An extension or page script that intercepts requests can serve them
-          without DevTools ever seeing them, and can intercept a debug replay. If requests are
-          missing, disable request-interception extensions for this page and reload.
-        </div>
-      )}
-
       <div className="extension-workspace">
         <aside className="request-list" aria-label="Captured Coveo requests">
           <div className="request-list-heading">
@@ -101,7 +92,7 @@ export function ExtensionApp() {
             <div className="extension-empty">
               {snapshot.exchanges.length
                 ? 'No requests match the current filters.'
-                : 'Reload or use the inspected page to capture Coveo traffic.'}
+                : emptyCaptureMessage(snapshot.interceptors)}
             </div>
           ) : (
             filtered.map((exchange) => (
@@ -531,6 +522,14 @@ function secondaryLabel(exchange: CapturedExchange): string {
     if (event) return event;
   }
   return exchange.pipeline || endpointLabel(exchange.url);
+}
+
+function emptyCaptureMessage(interceptors: CaptureSnapshot['interceptors']): string {
+  const base = 'Reload or use the inspected page to capture Coveo traffic.';
+  const replaced = describeInterceptors(interceptors);
+  return replaced
+    ? `${base} ${replaced} If the page is issuing Coveo calls, an extension or script that intercepts requests may be hiding them from DevTools.`
+    : base;
 }
 
 function familyLabel(family: CoveoRequestFamily): string {

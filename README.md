@@ -145,8 +145,11 @@ Browser extensions that intercept or mock network traffic install their own
 is clearly issuing Coveo calls. Disable those extensions for the inspected
 origin and reload. The same interception can swallow a debug replay.
 
-The panel detects this: if `window.fetch` or `XMLHttpRequest` has been replaced
-on the inspected page, a warning appears above the request list.
+The panel helps you spot this: when nothing has been captured, the empty request
+list reports whether `window.fetch` or `XMLHttpRequest` has been replaced on the
+inspected page. Plenty of sites replace them for benign reasons — monitoring
+agents, consent managers, framework polyfills — so treat it as a lead rather
+than a diagnosis.
 
 ### Debug replay
 
