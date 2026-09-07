@@ -3,6 +3,7 @@ import { buildSession } from '../ingest/buildSession';
 import { SessionProvider } from '../state/store';
 import { InspectorView } from '../components/InspectorView';
 import { parseAnswerStream } from './answerStream';
+import { describeInterceptors } from './pageInterceptors';
 import type {
   CapturedExchange,
   CapturedHeader,
@@ -37,6 +38,7 @@ export function ExtensionApp() {
     .filter((exchange) => matchesFilter(exchange, filter))
     .reverse();
   const selected = snapshot.exchanges.find(({ id }) => id === selectedId) ?? null;
+  const interceptorWarning = describeInterceptors(snapshot.interceptors);
 
   useEffect(() => {
     if (selectedId && snapshot.exchanges.some(({ id }) => id === selectedId)) return;
@@ -81,6 +83,14 @@ export function ExtensionApp() {
           Clear
         </button>
       </header>
+
+      {interceptorWarning && (
+        <div className="notice warn interceptor-notice">
+          {interceptorWarning} An extension or page script that intercepts requests can serve them
+          without DevTools ever seeing them, and can intercept a debug replay. If requests are
+          missing, disable request-interception extensions for this page and reload.
+        </div>
+      )}
 
       <div className="extension-workspace">
         <aside className="request-list" aria-label="Captured Coveo requests">
@@ -133,9 +143,9 @@ function RequestListItem({
         <span>{formatTime(exchange.startedAt)}</span>
         {exchange.replayOf && <span className="replay-badge">Replay</span>}
       </span>
-      <strong>{exchange.query || endpointLabel(exchange.url)}</strong>
+      <strong>{primaryLabel(exchange)}</strong>
       <span className="request-item-meta">
-        {exchange.method} · {exchange.pipeline || endpointLabel(exchange.url)} · {Math.round(exchange.durationMs)} ms
+        {exchange.method} · {secondaryLabel(exchange)} · {Math.round(exchange.durationMs)} ms
       </span>
     </button>
   );
@@ -239,10 +249,23 @@ function SummaryView({ exchange }: { exchange: CapturedExchange }) {
       <dd>{exchange.durationMs.toFixed(1)} ms</dd>
       <dt>Family</dt>
       <dd>{familyLabel(exchange.family)}</dd>
-      <dt>Query</dt>
-      <dd>{exchange.query ?? '—'}</dd>
-      <dt>Pipeline</dt>
-      <dd>{exchange.pipeline ?? '—'}</dd>
+      {exchange.family === 'analytics' ? (
+        <>
+          <dt>Event</dt>
+          <dd>{exchange.eventClass ?? '—'}</dd>
+          <dt>Event type</dt>
+          <dd>{exchange.eventType ?? '—'}</dd>
+          <dt>Event value</dt>
+          <dd>{exchange.eventValue ?? '—'}</dd>
+        </>
+      ) : (
+        <>
+          <dt>Query</dt>
+          <dd>{exchange.query ?? '—'}</dd>
+          <dt>Pipeline</dt>
+          <dd>{exchange.pipeline ?? '—'}</dd>
+        </>
+      )}
       <dt>Response type</dt>
       <dd>{exchange.responseMimeType ?? 'Unknown'}</dd>
       <dt>Capture</dt>
@@ -436,7 +459,7 @@ function AnswerView({ exchange }: { exchange: CapturedExchange }) {
                 ))}
               </dl>
               {citation.text && (
-                <details>
+                <details className="answer-citation-passage">
                   <summary>Cited passage</summary>
                   <pre>{citation.text}</pre>
                 </details>
@@ -483,9 +506,31 @@ function useCaptureBridge(): {
 function matchesFilter(exchange: CapturedExchange, filter: string): boolean {
   const needle = filter.trim().toLowerCase();
   if (!needle) return true;
-  return [exchange.url, exchange.query, exchange.pipeline, exchange.method, exchange.statusText]
+  return [
+    exchange.url,
+    exchange.query,
+    exchange.pipeline,
+    exchange.eventClass,
+    exchange.eventType,
+    exchange.eventValue,
+    exchange.method,
+    exchange.statusText,
+  ]
     .filter((value): value is string => Boolean(value))
     .some((value) => value.toLowerCase().includes(needle));
+}
+
+function primaryLabel(exchange: CapturedExchange): string {
+  if (exchange.family === 'analytics' && exchange.eventClass) return exchange.eventClass;
+  return exchange.query || endpointLabel(exchange.url);
+}
+
+function secondaryLabel(exchange: CapturedExchange): string {
+  if (exchange.family === 'analytics') {
+    const event = [exchange.eventType, exchange.eventValue].filter(Boolean).join(' · ');
+    if (event) return event;
+  }
+  return exchange.pipeline || endpointLabel(exchange.url);
 }
 
 function familyLabel(family: CoveoRequestFamily): string {

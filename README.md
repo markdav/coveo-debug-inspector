@@ -54,6 +54,8 @@ position on relevance.
 - Any `Authorization` header in a pasted curl command is **stripped on ingest**.
 - The extension redacts authorization, cookie and API-key values — in headers
   and in URL query strings — before data reaches the panel.
+- The extension manifest declares no `permissions`, no `host_permissions` and no
+  content scripts. See [The install permission warning](#the-install-permission-warning).
 - No persistence by default; reload clears everything.
 
 ## Usage
@@ -100,6 +102,18 @@ without a response body. Reload the inspected page to capture complete bodies.
 Coveo endpoints proxied through a site's own origin — for example a Salesforce
 managed package — are detected by a literal `coveo` path segment.
 
+### The install permission warning
+
+Chrome warns that the extension can **read and change your data on the websites
+you visit**. That warning comes from the `devtools_page` manifest key on its
+own: declaring it makes Chromium grant the extension an implicit `devtools`
+permission, which Chrome reports as a host permission because a DevTools panel
+can evaluate code in any page you inspect.
+
+The manifest requests no `permissions` and no `host_permissions`, and ships no
+content script. The panel only ever sees traffic from the tab whose DevTools you
+have open, and only while that DevTools window is open.
+
 ### Packaging for the Chrome Web Store
 
 ```bash
@@ -130,6 +144,9 @@ Browser extensions that intercept or mock network traffic install their own
 `chrome.devtools.network` entirely, so the panel stays empty even though the page
 is clearly issuing Coveo calls. Disable those extensions for the inspected
 origin and reload. The same interception can swallow a debug replay.
+
+The panel detects this: if `window.fetch` or `XMLHttpRequest` has been replaced
+on the inspected page, a warning appears above the request list.
 
 ### Debug replay
 

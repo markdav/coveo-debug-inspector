@@ -11,6 +11,11 @@ import {
   createReplayExpression,
   type PageReplayResult,
 } from './replay';
+import {
+  createInterceptorProbeExpression,
+  NO_INTERCEPTORS,
+  type InterceptorReport,
+} from './pageInterceptors';
 import type {
   CaptureSnapshot,
   CoveoDevtoolsBridge,
@@ -26,12 +31,13 @@ export class CaptureController {
   private readonly pendingReplays = new Map<string, Array<{ captureId: string; replayToken: string }>>();
   private readonly replayTokens = new Map<string, string>();
   private readonly replayResults = new Map<string, PageReplayResult>();
+  private interceptors: InterceptorReport = NO_INTERCEPTORS;
 
   readonly bridge: CoveoDevtoolsBridge = {
-    getSnapshot: () => this.log.getSnapshot(),
+    getSnapshot: () => this.snapshot(),
     subscribe: (listener) => {
       this.listeners.add(listener);
-      listener(this.log.getSnapshot());
+      listener(this.snapshot());
       return () => this.listeners.delete(listener);
     },
     clear: () => {
@@ -48,6 +54,7 @@ export class CaptureController {
   start(): void {
     chrome.devtools.network.onRequestFinished.addListener((request) => this.captureFinished(request));
     chrome.devtools.network.onNavigated.addListener(() => {
+      this.probeInterceptors();
       if (!this.log.handleNavigation()) return;
       this.replayEnvelopes.clear();
       this.pendingReplays.clear();
@@ -59,6 +66,7 @@ export class CaptureController {
       for (const entry of har.entries) this.captureEntry(entry, 'unavailable');
       this.emit();
     });
+    this.probeInterceptors();
   }
 
   private captureFinished(request: chrome.devtools.network.Request): void {
@@ -263,8 +271,23 @@ export class CaptureController {
   }
 
   private emit(): void {
-    const snapshot = this.log.getSnapshot();
+    const snapshot = this.snapshot();
     for (const listener of this.listeners) listener(snapshot);
+  }
+
+  private snapshot(): CaptureSnapshot {
+    return { ...this.log.getSnapshot(), interceptors: this.interceptors };
+  }
+
+  private probeInterceptors(): void {
+    chrome.devtools.inspectedWindow.eval<InterceptorReport>(
+      createInterceptorProbeExpression(),
+      (result, exceptionInfo) => {
+        if (exceptionInfo || !result) return;
+        this.interceptors = result;
+        this.emit();
+      },
+    );
   }
 }
 

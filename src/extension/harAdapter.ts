@@ -5,6 +5,7 @@ import type {
   ResponseBodyState,
 } from './types';
 import { classifyCoveoRequest } from './classifyCoveoRequest';
+import { readAnalyticsLabels } from './analyticsEvent';
 import { readSearchBodyLabels } from './searchBody';
 
 export interface HarEntryLike {
@@ -43,6 +44,10 @@ export function adaptHarEntry(
   const requestContentType =
     entry.request.headers.find(({ name }) => name.toLowerCase() === 'content-type')?.value ?? null;
   const labels = readSearchBodyLabels(requestBody, requestContentType);
+  const analytics =
+    family === 'analytics'
+      ? readAnalyticsLabels(entry.request.url, requestBody)
+      : { eventClass: null, eventType: null, eventValue: null };
   const id = captureFingerprint(
     entry.startedDateTime,
     entry.request.method,
@@ -69,6 +74,9 @@ export function adaptHarEntry(
       bodyError: null,
       query: labels.query,
       pipeline: labels.pipeline,
+      eventClass: analytics.eventClass,
+      eventType: analytics.eventType,
+      eventValue: analytics.eventValue,
       replayOf: null,
     },
     replay: {

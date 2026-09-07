@@ -12,6 +12,28 @@ const FORBIDDEN_REPLAY_HEADERS = new Set([
   'user-agent',
 ]);
 
+// Browser-generated headers that become author headers on replay and would force a CORS preflight
+// the original request never made. DevTools' "Disable cache" adds cache-control/pragma, for example.
+const PREFLIGHT_FORCING_HEADERS = new Set([
+  'accept-encoding',
+  'cache-control',
+  'dnt',
+  'if-modified-since',
+  'if-none-match',
+  'pragma',
+  'priority',
+  'te',
+  'upgrade-insecure-requests',
+]);
+
+function isReplayableHeader(name: string): boolean {
+  const lowerName = name.toLowerCase();
+  if (lowerName.startsWith(':')) return false; // HTTP/2 pseudo-headers appear in DevTools captures.
+  if (lowerName.startsWith('sec-')) return false;
+  if (lowerName.startsWith('proxy-')) return false;
+  return !FORBIDDEN_REPLAY_HEADERS.has(lowerName) && !PREFLIGHT_FORCING_HEADERS.has(lowerName);
+}
+
 export function buildDebugReplay(envelope: ReplayEnvelope): ReplayRequest {
   if (envelope.family !== 'search') throw new Error('Only Search requests can be replayed.');
   if (envelope.method.toUpperCase() !== 'POST') throw new Error('Only POST Search requests can be replayed.');
@@ -29,19 +51,22 @@ export function buildDebugReplay(envelope: ReplayEnvelope): ReplayRequest {
 
   const headers: Record<string, string> = {};
   for (const { name, value } of envelope.headers) {
-    const lowerName = name.toLowerCase();
-    if (FORBIDDEN_REPLAY_HEADERS.has(lowerName) || lowerName.startsWith('sec-')) continue;
+    if (!isReplayableHeader(name)) continue;
     headers[name] = value;
   }
   if (!Object.keys(headers).some((name) => name.toLowerCase() === 'content-type')) {
     headers['Content-Type'] = 'application/json';
   }
 
+  // `include` on an endpoint that answers `Access-Control-Allow-Origin: *` fails CORS outright.
+  const sentCookies = envelope.headers.some(({ name }) => name.toLowerCase() === 'cookie');
+
   return {
     method: 'POST',
     url: envelope.url,
     headers,
     body,
+    credentials: sentCookies ? 'include' : 'omit',
   };
 }
 
@@ -72,7 +97,7 @@ function launchReplay(request: ReplayRequest, replayToken: string): { launched: 
     method: request.method,
     headers: request.headers,
     body: request.body,
-    credentials: 'include',
+    credentials: request.credentials ?? 'omit',
   })
     .then(async (response) => {
       replayResults[replayToken] = {
