@@ -429,6 +429,8 @@ button.compact { min-height: 30px; padding: 4px 10px; border-radius: 5px; }
 .detail-body { min-height: 0; overflow: auto; padding: 14px; }
 .detail-body.analysis-body { padding: 0; }
 .extension-empty { padding: 28px 16px; color: var(--muted); text-align: center; }
+.extension-empty p { margin: 0 0 12px; }
+.extension-empty p:last-child { margin-bottom: 0; }
 .detail-empty { margin: auto; }
 .capture-summary { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 7px 18px; margin: 0; }
 .capture-summary dt { color: var(--muted); }

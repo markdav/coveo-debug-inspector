@@ -639,10 +639,10 @@ describe('DevTools capture controller', () => {
 describe('interceptor reporting', () => {
   it('names the replaced globals', () => {
     expect(describeInterceptors({ fetchWrapped: true, xhrWrapped: false })).toBe(
-      'window.fetch has been replaced on this page.',
+      'window.fetch has been replaced on this page',
     );
     expect(describeInterceptors({ fetchWrapped: true, xhrWrapped: true })).toBe(
-      'window.fetch and XMLHttpRequest have been replaced on this page.',
+      'window.fetch and XMLHttpRequest have been replaced on this page',
     );
   });
 

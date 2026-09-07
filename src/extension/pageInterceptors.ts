@@ -16,7 +16,7 @@ export function describeInterceptors(report: InterceptorReport | undefined): str
     report.xhrWrapped ? 'XMLHttpRequest' : null,
   ].filter(Boolean);
   if (wrapped.length === 0) return null;
-  return `${wrapped.join(' and ')} ${wrapped.length > 1 ? 'have' : 'has'} been replaced on this page.`;
+  return `${wrapped.join(' and ')} ${wrapped.length > 1 ? 'have' : 'has'} been replaced on this page`;
 }
 
 // Interceptor extensions can serve a wrapped request from their own worker, so DevTools never sees it.

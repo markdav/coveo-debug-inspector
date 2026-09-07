@@ -38,6 +38,7 @@ export function ExtensionApp() {
     .filter((exchange) => matchesFilter(exchange, filter))
     .reverse();
   const selected = snapshot.exchanges.find(({ id }) => id === selectedId) ?? null;
+  const hint = interceptorHint(snapshot.interceptors);
 
   useEffect(() => {
     if (selectedId && snapshot.exchanges.some(({ id }) => id === selectedId)) return;
@@ -90,9 +91,14 @@ export function ExtensionApp() {
           </div>
           {filtered.length === 0 ? (
             <div className="extension-empty">
-              {snapshot.exchanges.length
-                ? 'No requests match the current filters.'
-                : emptyCaptureMessage(snapshot.interceptors)}
+              {snapshot.exchanges.length ? (
+                'No requests match the current filters.'
+              ) : (
+                <>
+                  <p>Reload or use the inspected page to capture Coveo traffic.</p>
+                  {hint && <p>{hint}</p>}
+                </>
+              )}
             </div>
           ) : (
             filtered.map((exchange) => (
@@ -524,12 +530,13 @@ function secondaryLabel(exchange: CapturedExchange): string {
   return exchange.pipeline || endpointLabel(exchange.url);
 }
 
-function emptyCaptureMessage(interceptors: CaptureSnapshot['interceptors']): string {
-  const base = 'Reload or use the inspected page to capture Coveo traffic.';
+function interceptorHint(interceptors: CaptureSnapshot['interceptors']): string | null {
   const replaced = describeInterceptors(interceptors);
-  return replaced
-    ? `${base} ${replaced} If the page is issuing Coveo calls, an extension or script that intercepts requests may be hiding them from DevTools.`
-    : base;
+  if (!replaced) return null;
+  return (
+    `Don't see anything? I notice ${replaced}, likely by another extension. ` +
+    'If the page is issuing Coveo calls, try disabling other extensions that may be modifying requests.'
+  );
 }
 
 function familyLabel(family: CoveoRequestFamily): string {
