@@ -1,3 +1,5 @@
+import type { InterceptorReport } from './pageInterceptors';
+
 export type CoveoRequestFamily =
   | 'search'
   | 'query-suggest'
@@ -33,6 +35,9 @@ export interface CapturedExchange {
   bodyError: string | null;
   query: string | null;
   pipeline: string | null;
+  eventClass: string | null;
+  eventType: string | null;
+  eventValue: string | null;
   replayOf: string | null;
 }
 
@@ -49,11 +54,13 @@ export interface ReplayRequest {
   url: string;
   headers: Record<string, string>;
   body: string;
+  credentials?: RequestCredentials;
 }
 
 export interface CaptureSnapshot {
   exchanges: CapturedExchange[];
   preserveLog: boolean;
+  interceptors?: InterceptorReport;
 }
 
 export interface CoveoDevtoolsBridge {

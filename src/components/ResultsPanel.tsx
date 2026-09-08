@@ -28,7 +28,6 @@ export function ResultsPanel() {
   const { session, expected } = useSession();
   const [sort, setSort] = useState<SortKey>('rank');
   const [asc, setAsc] = useState(true);
-  const [onlyBelowGate, setOnlyBelowGate] = useState(false);
   const [expanded, setExpanded] = useState<Set<number>>(() => new Set());
   const [selectedRank, setSelectedRank] = useState<number | null>(null);
   const tableRef = useRef<HTMLDivElement>(null);
@@ -39,8 +38,7 @@ export function ResultsPanel() {
   }, [session?.results]);
 
   const rows = useMemo(() => {
-    let r = session?.results ?? [];
-    if (onlyBelowGate) r = r.filter((d) => rf(d) === 0);
+    const r = session?.results ?? [];
     const dir = asc ? 1 : -1;
     return [...r].sort((a, b) => {
       let av: number | string;
@@ -78,12 +76,7 @@ export function ResultsPanel() {
       if (av > bv) return 1 * dir;
       return 0;
     });
-  }, [session, sort, asc, onlyBelowGate]);
-
-  const chartResults = useMemo(() => {
-    const results = session?.results ?? [];
-    return onlyBelowGate ? results.filter((result) => rf(result) === 0) : results;
-  }, [session?.results, onlyBelowGate]);
+  }, [session, sort, asc]);
 
   if (!session) return null;
 
@@ -124,16 +117,8 @@ export function ResultsPanel() {
 
   return (
     <Panel id="results" title="Results" hint={`${session.results.length} returned`}>
-      <label className="muted" style={{ fontSize: 12, display: 'block', marginBottom: 8 }}>
-        <input
-          type="checkbox"
-          checked={onlyBelowGate}
-          onChange={(e) => setOnlyBelowGate(e.target.checked)}
-        />{' '}
-        Only show docs below the semantic gate (Ranking functions = 0)
-      </label>
       <ScoreVisualizations
-        results={chartResults}
+        results={session.results}
         selectedRank={selectedRank}
         onSelectRank={selectResult}
       />

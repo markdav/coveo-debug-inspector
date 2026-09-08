@@ -3,6 +3,12 @@ import { CaptureLog } from '../src/extension/captureLog';
 import { CaptureController } from '../src/extension/captureController';
 import { classifyCoveoRequest } from '../src/extension/classifyCoveoRequest';
 import { parseAnswerStream } from '../src/extension/answerStream';
+import { readAnalyticsLabels } from '../src/extension/analyticsEvent';
+import {
+  createInterceptorProbeExpression,
+  describeInterceptors,
+  NO_INTERCEPTORS,
+} from '../src/extension/pageInterceptors';
 import { adaptHarEntry, decodeResponseBody, redactUrlCredentials, type HarEntryLike } from '../src/extension/harAdapter';
 import {
   buildDebugReplay,
@@ -51,6 +57,15 @@ describe('Coveo request classification', () => {
     expect(classifyCoveoRequest('https://example.com/rest/search/v2')).toBeNull();
     expect(classifyCoveoRequest('https://static.cloud.coveo.com/searchui/widget.js')).toBeNull();
     expect(classifyCoveoRequest('not a url')).toBeNull();
+  });
+
+  it.each([
+    'https://docs.coveo.com/en/assets/js/atomic/coveo.analytics.js',
+    'https://docs.coveo.com/en/assets/js/recommendations.mjs',
+    'https://acme.org.coveo.com/rest/search/v2/index.js.map',
+    'https://static.cloud.coveo.com/atomic/v3/themes/coveo.css',
+  ])('ignores the static asset %s', (url) => {
+    expect(classifyCoveoRequest(url)).toBeNull();
   });
 });
 
@@ -151,6 +166,60 @@ describe('HAR adaptation', () => {
       'https://acme.org.coveo.com/rest/search/v2?organizationId=acme',
     );
     expect(redactUrlCredentials('not a url')).toBe('not a url');
+  });
+});
+
+describe('analytics event labels', () => {
+  it('reads the event class from the endpoint and the type and value from a custom event', () => {
+    expect(
+      readAnalyticsLabels(
+        'https://analytics.cloud.coveo.com/rest/ua/v15/analytics/custom?visitor=abc',
+        JSON.stringify({ eventType: 'getMoreResults', eventValue: 'showMore', language: 'en' }),
+      ),
+    ).toEqual({ eventClass: '/custom', eventType: 'getMoreResults', eventValue: 'showMore' });
+  });
+
+  it('falls back to actionCause and queryText for search events', () => {
+    expect(
+      readAnalyticsLabels(
+        'https://analytics.cloud.coveo.com/rest/v15/analytics/search',
+        JSON.stringify({ actionCause: 'searchboxSubmit', queryText: 'dl380 firmware' }),
+      ),
+    ).toEqual({ eventClass: '/search', eventType: 'searchboxSubmit', eventValue: 'dl380 firmware' });
+  });
+
+  it('names the event from Event Protocol batches and counts the extras', () => {
+    expect(
+      readAnalyticsLabels(
+        'https://acme.org.coveo.com/rest/organizations/acme/events/v1',
+        JSON.stringify([{ meta: { type: 'ec.productClick' } }, { meta: { type: 'Search' } }]),
+      ),
+    ).toEqual({ eventClass: '/events', eventType: 'ec.productClick (+1 more)', eventValue: null });
+  });
+
+  it('keeps the event class when the body cannot be parsed', () => {
+    expect(
+      readAnalyticsLabels('https://analytics.cloud.coveo.com/rest/v15/analytics/click', 'not json'),
+    ).toEqual({ eventClass: '/click', eventType: null, eventValue: null });
+  });
+
+  it('labels analytics captures on the exchange', () => {
+    const adapted = adaptHarEntry({
+      startedDateTime: '2026-09-07T14:49:28.364Z',
+      time: 30,
+      request: {
+        method: 'POST',
+        url: 'https://analytics.cloud.coveo.com/rest/v15/analytics/click',
+        headers: [{ name: 'Content-Type', value: 'application/json' }],
+        postData: { text: '{"actionCause":"documentOpen","documentTitle":"DL380 setup"}' },
+      },
+      response: { status: 200, statusText: 'OK', headers: [], content: { mimeType: 'application/json' } },
+    });
+
+    expect(adapted?.exchange.family).toBe('analytics');
+    expect(adapted?.exchange.eventClass).toBe('/click');
+    expect(adapted?.exchange.eventType).toBe('documentOpen');
+    expect(adapted?.exchange.eventValue).toBe('DL380 setup');
   });
 });
 
@@ -459,9 +528,14 @@ describe('DevTools capture controller', () => {
         },
         inspectedWindow: {
           eval: (
-            _expression: string,
+            expression: string,
             callback: (typeof evalCallbacks)[number],
-          ) => evalCallbacks.push(callback),
+          ) => {
+            if (expression === createInterceptorProbeExpression()) {
+              return (callback as (result: unknown) => void)(NO_INTERCEPTORS);
+            }
+            evalCallbacks.push(callback);
+          },
         },
       },
     });
@@ -510,7 +584,12 @@ describe('DevTools capture controller', () => {
             }),
         },
         inspectedWindow: {
-          eval: (_expression: string, callback: (typeof evalCallbacks)[number]) => evalCallbacks.push(callback),
+          eval: (expression: string, callback: (typeof evalCallbacks)[number]) => {
+            if (expression === createInterceptorProbeExpression()) {
+              return (callback as (result: unknown) => void)(NO_INTERCEPTORS);
+            }
+            evalCallbacks.push(callback);
+          },
         },
       },
     });
@@ -524,6 +603,63 @@ describe('DevTools capture controller', () => {
     evalCallbacks.shift()?.({ done: true, error: 'Failed to fetch' });
 
     await expect(replayPromise).rejects.toThrow('Failed to fetch');
+  });
+
+  it('reports a page whose fetch has been replaced by an interceptor', () => {
+    vi.stubGlobal('chrome', {
+      devtools: {
+        network: {
+          onRequestFinished: { addListener: vi.fn() },
+          onNavigated: { addListener: vi.fn() },
+          getHAR: vi.fn(),
+        },
+        inspectedWindow: {
+          eval: (
+            expression: string,
+            callback: (result: { fetchWrapped: boolean; xhrWrapped: boolean }) => void,
+          ) => {
+            if (expression === createInterceptorProbeExpression()) {
+              callback({ fetchWrapped: true, xhrWrapped: false });
+            }
+          },
+        },
+      },
+    });
+
+    const controller = new CaptureController();
+    controller.start();
+
+    expect(controller.bridge.getSnapshot().interceptors).toEqual({
+      fetchWrapped: true,
+      xhrWrapped: false,
+    });
+  });
+});
+
+describe('interceptor reporting', () => {
+  it('names the replaced globals', () => {
+    expect(describeInterceptors({ fetchWrapped: true, xhrWrapped: false })).toBe(
+      'window.fetch has been replaced on this page',
+    );
+    expect(describeInterceptors({ fetchWrapped: true, xhrWrapped: true })).toBe(
+      'window.fetch and XMLHttpRequest have been replaced on this page',
+    );
+  });
+
+  it('stays silent when nothing is wrapped', () => {
+    expect(describeInterceptors(NO_INTERCEPTORS)).toBeNull();
+    expect(describeInterceptors(undefined)).toBeNull();
+  });
+
+  it('detects a wrapped fetch when the probe runs against a page scope', () => {
+    const probe = (scope: unknown) =>
+      new Function('globalThis', `return (${createInterceptorProbeExpression()})`)(scope) as {
+        fetchWrapped: boolean;
+      };
+
+    // Node's own fetch is not native code, so a genuinely native function stands in for it.
+    expect(probe({ fetch: Math.max }).fetchWrapped).toBe(false);
+    expect(probe({ fetch: () => Promise.resolve() }).fetchWrapped).toBe(true);
   });
 });
 
@@ -546,6 +682,9 @@ function exchange(id: string): CapturedExchange {
     bodyError: null,
     query: null,
     pipeline: null,
+    eventClass: null,
+    eventType: null,
+    eventValue: null,
     replayOf: null,
   };
 }

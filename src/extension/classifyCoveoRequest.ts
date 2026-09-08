@@ -2,6 +2,10 @@ import type { CoveoRequestFamily } from './types';
 
 const COVEO_HOST_SUFFIXES = ['.coveo.com', '.coveo.cloud'];
 
+// Coveo hosts also serve the UI bundles, whose paths can look like API paths (coveo.analytics.js).
+const STATIC_ASSET_PATH =
+  /\.(m?js|cjs|css|map|html?|svg|png|jpe?g|gif|webp|avif|ico|woff2?|ttf|otf|eot|wasm|txt|xml)$/;
+
 export function classifyCoveoRequest(rawUrl: string): CoveoRequestFamily | null {
   let url: URL;
   try {
@@ -12,6 +16,7 @@ export function classifyCoveoRequest(rawUrl: string): CoveoRequestFamily | null 
 
   const host = url.hostname.toLowerCase();
   const path = url.pathname.toLowerCase();
+  if (STATIC_ASSET_PATH.test(path)) return null;
   const isCoveoHost =
     host === 'coveo.com' ||
     host === 'coveo.cloud' ||
@@ -39,7 +44,7 @@ export function classifyCoveoRequest(rawUrl: string): CoveoRequestFamily | null 
   if (/\/agents\/[^/]+(\/|$)/.test(path)) return 'agent';
   // Checked before analytics: a proxy path may itself contain "analytics".
   if (target === '/rest/search' || target.startsWith('/rest/search/')) return 'search';
-  if (host.startsWith('analytics.') || target.includes('/analytics') || target.includes('/rest/ua')) {
+  if (host.startsWith('analytics.') || /\/analytics(\/|$)/.test(target) || target.includes('/rest/ua')) {
     return 'analytics';
   }
   return target === '/rest' || target.startsWith('/rest/') ? 'other' : null;
